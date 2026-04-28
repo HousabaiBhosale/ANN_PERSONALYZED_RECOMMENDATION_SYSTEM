@@ -90,12 +90,15 @@ def handle_exception(e):
 @app.route('/predict', methods=['POST'])
 def predict():
     try:
+        print(">>> [PREDICT] Starting prediction request...")
         data = request.json
-        user_id = int(data['userId']) # Ensure integer
+        user_id = int(data['userId'])
         movie_id_input = data['movieId']
+        print(f">>> [PREDICT] User: {user_id}, Movie Input: {movie_id_input}")
 
         user_enc = user_encoder.get(user_id)
         if user_enc is None:
+            print(f">>> [PREDICT] User ID {user_id} not found.")
             return jsonify({"error": f"User ID {user_id} not found in training data"}), 404
 
         if isinstance(movie_id_input, str) and ',' in movie_id_input:
@@ -105,7 +108,6 @@ def predict():
         else:
             movie_ids = [int(movie_id_input)]
 
-        # Collect valid encodings for batch prediction
         valid_mids = []
         valid_encs = []
         for mid in movie_ids:
@@ -119,10 +121,13 @@ def predict():
 
         results = []
         if valid_encs:
-            # ✅ Batch Prediction
+            print(f">>> [PREDICT] Running model.predict for {len(valid_encs)} items...")
             u_arr = np.full(len(valid_encs), user_enc)
             m_arr = np.array(valid_encs)
+            
+            # Predict
             batch_preds = model.predict([u_arr, m_arr], verbose=0).flatten()
+            print(">>> [PREDICT] Model prediction successful.")
 
             user_rating_count = len(ratings[ratings['userId'] == user_id]) if not ratings.empty else 0
             
@@ -149,10 +154,12 @@ def predict():
         for mid in invalid_mids:
             results.append({"movieId": mid, "error": "Invalid movie ID", "predicted_rating": 0})
 
+        print(">>> [PREDICT] Sending results back to client.")
         if len(results) == 1:
             return jsonify(results[0])
         return jsonify({"predictions": results})
     except Exception as e:
+        print(f">>> [PREDICT] FATAL ERROR: {e}")
         return handle_exception(e)
 
 
