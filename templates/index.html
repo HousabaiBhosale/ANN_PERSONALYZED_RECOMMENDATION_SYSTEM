@@ -390,18 +390,25 @@ canvas{display:block}
   .nav-tabs {
     overflow-x:auto;
     white-space:nowrap;
-    padding-bottom:4px;
+    padding:4px 0 8px;
     -webkit-overflow-scrolling:touch;
     scrollbar-width:none;
-    max-width:160px;
+    max-width:calc(100vw - 110px);
+    display:flex;
+    gap:4px;
   }
   .nav-tabs::-webkit-scrollbar{display:none}
-  .nav-tab{padding:6px 10px;font-size:0.52rem;letter-spacing:0.1em}
-  .nav-inner{padding:0 10px;height:56px}
+  .nav-tab {
+    padding:10px 16px;
+    font-size:0.55rem;
+    letter-spacing:0.12em;
+    flex-shrink:0;
+  }
+  .nav-inner{padding:0 12px;height:60px}
   .page-title{font-size:1.8rem}
   .logo-sub{display:none}
-  .logo-main{font-size:1.2rem;letter-spacing:0.1em}
-  .page{padding-top:72px}
+  .logo-main{font-size:1.25rem;letter-spacing:0.05em}
+  .page{padding-top:80px}
   .stat-card{padding:15px}
   .stat-val{font-size:1.6rem}
   .btn-gold, .btn-ink{padding:11px 24px;font-size:0.85rem}
