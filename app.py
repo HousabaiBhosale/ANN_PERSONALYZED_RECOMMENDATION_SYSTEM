@@ -1,12 +1,20 @@
 import os
+import os
 os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+os.environ['TF_NUM_INTEROP_THREADS'] = '1'
+os.environ['TF_NUM_INTRAOP_THREADS'] = '1'
 
 from flask import Flask, request, jsonify, render_template
 from tensorflow.keras.models import load_model
+import tensorflow as tf
 import pickle
 import pandas as pd
 import numpy as np
+
+# Force single-threaded execution for memory stability
+tf.config.threading.set_inter_op_parallelism_threads(1)
+tf.config.threading.set_intra_op_parallelism_threads(1)
 
 app = Flask(__name__)
 
@@ -127,8 +135,10 @@ def predict():
             u_arr = np.array([user_enc] * len(valid_encs), dtype=np.int32)
             m_arr = np.array(valid_encs, dtype=np.int32)
             
-            # Predict with explicit batch size
-            batch_preds = model.predict([u_arr, m_arr], batch_size=len(valid_encs), verbose=0).flatten()
+            # Predict with lightweight on_batch method
+            batch_preds = model.predict_on_batch([u_arr, m_arr])
+            if hasattr(batch_preds, 'numpy'): batch_preds = batch_preds.numpy()
+            batch_preds = batch_preds.flatten()
             print(">>> [PREDICT] Model prediction successful.")
 
             user_rating_count = len(ratings[ratings['userId'] == user_id]) if not ratings.empty else 0
@@ -207,7 +217,9 @@ def recommend():
         print(f">>> [RECS] Predicting for {len(valid_encs)} movies...")
         u_arr = np.array([user_enc] * len(valid_encs), dtype=np.int32)
         m_arr = np.array(valid_encs, dtype=np.int32)
-        batch_preds = model.predict([u_arr, m_arr], batch_size=len(valid_encs), verbose=0).flatten()
+        batch_preds = model.predict_on_batch([u_arr, m_arr])
+        if hasattr(batch_preds, 'numpy'): batch_preds = batch_preds.numpy()
+        batch_preds = batch_preds.flatten()
         print(">>> [RECS] Prediction successful.")
 
         predictions = list(zip(valid_mids, batch_preds))
