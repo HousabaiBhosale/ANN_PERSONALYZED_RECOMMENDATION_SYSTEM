@@ -72,6 +72,8 @@ body::after {
   display:flex;align-items:center;justify-content:space-between;
   padding:0 32px;height:62px;
 }
+.status-row { display: flex; align-items: center; gap: 20px; }
+.nav-controls { display: flex; align-items: center; }
 .logo {
   display:flex;align-items:baseline;gap:10px;cursor:pointer;
 }
@@ -387,26 +389,38 @@ canvas{display:block}
 }
 
 @media(max-width:640px){
-  .nav-tabs {
-    display: flex;
-    overflow-x: auto;
-    overflow-y: hidden;
-    -webkit-overflow-scrolling: touch;
-    gap: 1.2rem;
-    padding: 10px 0;
-    scrollbar-width: none;
-    flex-grow: 1;
-    max-width: none;
+  .nav-inner {
+    flex-direction: column;
+    height: auto;
+    padding: 12px 15px;
+    align-items: flex-start;
+    gap: 10px;
   }
-  .nav-tabs::-webkit-scrollbar{display:none}
+  .nav-controls {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .nav-tabs {
+    width: 100%;
+    margin: 0;
+    padding: 8px 0;
+    border-top: 1px solid var(--border);
+    justify-content: flex-start;
+    overflow-x: auto !important;
+  }
   .nav-tab {
     flex-shrink: 0;
-    white-space: nowrap;
-    font-size: 0.8rem;
-    letter-spacing: 2px;
     padding: 8px 12px;
+    font-size: 0.75rem;
   }
-  .nav-inner{padding:0 12px;height:60px}
+  .status-row {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
   .page-title{font-size:1.8rem}
   .logo-sub{display:none}
   .logo-main{font-size:1.25rem;letter-spacing:0.05em}
@@ -438,15 +452,20 @@ canvas{display:block}
 <nav id="navbar">
   <div class="nav-rule"></div>
   <div class="nav-inner">
-    <div class="logo" onclick="goTo('home')">
-      <div class="logo-main">CINE·<span>ANN</span></div>
-      <div class="logo-sub">Neural Intelligence</div>
-    </div>
-    <div style="display:flex;align-items:center;gap:8px">
-      <span id="health-badge" class="health-badge offline"><span class="health-dot"></span>OFFLINE</span>
-      <div id="user-info" style="display:none;align-items:center;gap:6px">
-        <span id="uid-label"></span><button class="logout-btn" onclick="doLogout()" style="padding:4px 8px;font-size:0.5rem">LOGOUT</button>
+    <div class="status-row">
+      <div class="logo" onclick="goTo('home')">
+        <div class="logo-main">CINE·<span>ANN</span></div>
+        <div class="logo-sub">Neural Intelligence</div>
       </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span id="health-badge" class="health-badge offline"><span class="health-dot"></span>OFFLINE</span>
+        <div id="user-info" style="display:none;align-items:center;gap:6px">
+          <span id="uid-label"></span><button class="logout-btn" onclick="doLogout()" style="padding:4px 8px;font-size:0.5rem">LOGOUT</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-controls">
       <div class="nav-tabs" id="nav-tabs">
         <button class="nav-tab active" id="nt-login" onclick="goTo('login')">LOGIN</button>
         <button class="nav-tab" id="nt-home" style="display:none" onclick="goTo('home')">HOME</button>
