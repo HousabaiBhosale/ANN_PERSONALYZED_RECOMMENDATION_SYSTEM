@@ -388,21 +388,23 @@ canvas{display:block}
 
 @media(max-width:640px){
   .nav-tabs {
-    overflow-x:auto;
-    white-space:nowrap;
-    padding:4px 0 8px;
-    -webkit-overflow-scrolling:touch;
-    scrollbar-width:none;
-    max-width:calc(100vw - 110px);
-    display:flex;
-    gap:4px;
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    gap: 1.2rem;
+    padding: 10px 0;
+    scrollbar-width: none;
+    flex-grow: 1;
+    max-width: none;
   }
   .nav-tabs::-webkit-scrollbar{display:none}
   .nav-tab {
-    padding:10px 16px;
-    font-size:0.55rem;
-    letter-spacing:0.12em;
-    flex-shrink:0;
+    flex-shrink: 0;
+    white-space: nowrap;
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+    padding: 8px 12px;
   }
   .nav-inner{padding:0 12px;height:60px}
   .page-title{font-size:1.8rem}
