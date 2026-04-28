@@ -94,38 +94,46 @@ def predict():
     else:
         movie_ids = [int(movie_id_input)]
 
-    results = []
+    # Collect valid encodings for batch prediction
+    valid_mids = []
+    valid_encs = []
     for mid in movie_ids:
-        movie_enc = movie_encoder.get(mid)
-        if movie_enc is None:
-            results.append({"movieId": mid, "error": "Invalid movie", "predicted_rating": 0})
-            continue
+        enc = movie_encoder.get(mid)
+        if enc is not None:
+            valid_mids.append(mid)
+            valid_encs.append(enc)
 
-        pred = model.predict(
-            [np.array([user_enc]), np.array([movie_enc])], verbose=0
-        )
-        rating = float(pred[0][0] * 5)
+    results = []
+    if valid_encs:
+        # ✅ Batch Prediction
+        u_arr = np.full(len(valid_encs), user_enc)
+        m_arr = np.array(valid_encs)
+        batch_preds = model.predict([u_arr, m_arr], verbose=0).flatten()
 
         user_rating_count = len(ratings[ratings['userId'] == user_id])
-        confidence = min(99.9, 50.0 + (user_rating_count * 0.5) - abs(rating - 3.0)*2.0)
-
-        movie_df = movies[movies['movieId'] == mid]
-        if not movie_df.empty:
-            movie = movie_df.iloc[0]
+        
+        for mid, score in zip(valid_mids, batch_preds):
+            rating = float(score * 5.0)
+            confidence = min(99.9, 50.0 + (user_rating_count * 0.5) - abs(rating - 3.0)*2.0)
+            
+            movie_df = movies[movies['movieId'] == mid]
             movie_data = {
-                "title": movie['title'],
-                "genres": movie.get('genres', '')
+                "title": movie_df.iloc[0]['title'] if not movie_df.empty else f"Movie #{mid}",
+                "genres": movie_df.iloc[0].get('genres', '') if not movie_df.empty else ''
             }
-        else:
-            movie_data = None
 
-        results.append({
-            "predicted_rating": rating,
-            "confidence_score": round(confidence, 1),
-            "userId": user_id,
-            "movieId": mid,
-            "movie": movie_data
-        })
+            results.append({
+                "predicted_rating": rating,
+                "confidence_score": round(confidence, 1),
+                "userId": user_id,
+                "movieId": mid,
+                "movie": movie_data
+            })
+
+    # Add back errors for invalid movies
+    invalid_mids = [mid for mid in movie_ids if mid not in valid_mids]
+    for mid in invalid_mids:
+        results.append({"movieId": mid, "error": "Invalid movie", "predicted_rating": 0})
 
     if len(results) == 1:
         return jsonify(results[0])
@@ -144,7 +152,6 @@ def recommend():
         return jsonify({"error": "User not found"})
 
     user_enc = user_encoder[user_id]
-
     watched = ratings[ratings['userId'] == user_id]['movieId'].values
     unseen = [m for m in all_movie_ids if m not in watched]
 
@@ -154,19 +161,30 @@ def recommend():
         ]['movieId'].values
         unseen = [m for m in unseen if m in valid_movies]
 
-    predictions = []
+    # Limit to top 400 potential candidates for stability
+    unseen = unseen[:400]
+    
+    # Collect valid encodings for batch prediction
+    valid_mids = []
+    valid_encs = []
+    for mid in unseen:
+        enc = movie_encoder.get(mid)
+        if enc is not None:
+            valid_mids.append(mid)
+            valid_encs.append(enc)
 
-    for movie_id in unseen[:300]:
-        movie_enc = movie_encoder.get(movie_id)
-        if movie_enc is None:
-            continue
+    if not valid_encs:
+        return jsonify({"recommendations": [], "count": 0, "userId": user_id})
 
-        pred = model.predict([np.array([user_enc]), np.array([movie_enc])])
-        predictions.append((movie_id, float(pred[0][0])))
+    # ✅ Batch Prediction (Fast & Stable)
+    u_arr = np.full(len(valid_encs), user_enc)
+    m_arr = np.array(valid_encs)
+    batch_preds = model.predict([u_arr, m_arr], verbose=0).flatten()
 
+    predictions = list(zip(valid_mids, batch_preds))
     predictions.sort(key=lambda x: x[1], reverse=True)
+    
     top = predictions[:n]
-
     result = []
     for movie_id, score in top:
         movie_df = movies[movies['movieId'] == movie_id]
@@ -176,7 +194,7 @@ def recommend():
                 "movieId": int(movie_id),
                 "title": movie['title'],
                 "genres": movie.get('genres', ''),
-                "predicted_rating": score * 5
+                "predicted_rating": float(score * 5.0)
             })
 
     return jsonify({
