@@ -3,7 +3,7 @@ Flask-Cors
 numpy
 pandas
 scikit-learn
-tensorflow
+tensorflow-cpu
 keras
 h5py
 gunicorn

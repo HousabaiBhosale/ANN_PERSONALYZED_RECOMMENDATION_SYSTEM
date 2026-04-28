@@ -1,9 +1,12 @@
-from flask import Flask, request, jsonify, render_template
-import numpy as np
-import pandas as pd
-import pickle
 import os
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+
+from flask import Flask, request, jsonify, render_template
 from tensorflow.keras.models import load_model
+import pickle
+import pandas as pd
+import numpy as np
 
 app = Flask(__name__)
 

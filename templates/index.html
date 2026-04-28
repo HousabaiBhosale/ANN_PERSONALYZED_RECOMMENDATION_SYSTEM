@@ -974,8 +974,13 @@ function toast(msg,type='ok'){
 /* ── API ── */
 async function api(path,opts={}){
   const res = await fetch(BASE_URL+path,{headers:{'Content-Type':'application/json'},...opts});
+  if(!res.ok) {
+    let errText = "Error";
+    try { const d = await res.json(); errText = d.error || res.statusText; }
+    catch(e) { errText = `Server Error (${res.status})`; }
+    throw new Error(errText);
+  }
   const data = await res.json();
-  if(!res.ok) throw new Error(data.error||'Request failed');
   return data;
 }
 function setLoading(btnId,loading,label=''){
