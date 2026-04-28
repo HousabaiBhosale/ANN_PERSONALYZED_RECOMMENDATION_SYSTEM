@@ -1,9 +1,5 @@
 Flask
-Flask-Cors
 numpy
 pandas
 scikit-learn
-tflite-runtime
-keras
-h5py
 gunicorn
