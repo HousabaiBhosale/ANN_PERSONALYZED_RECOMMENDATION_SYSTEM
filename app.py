@@ -144,6 +144,25 @@ def recommend():
         return jsonify({"recommendations": res, "userId": u_id})
     except Exception as e: return handle_exception(e)
 
+@app.route('/rate', methods=['POST'])
+def rate():
+    try:
+        global ratings
+        data = request.json
+        uid, mid, r = int(data['userId']), int(data['movieId']), float(data['rating'])
+        new = pd.DataFrame({"userId": [uid], "movieId": [mid], "rating": [r]})
+        ratings = pd.concat([ratings, new], ignore_index=True)
+        return jsonify({"message": "Rating added"})
+    except Exception as e: return handle_exception(e)
+
+@app.route('/login', methods=['POST'])
+def login():
+    try:
+        uid = int(request.json.get('userId'))
+        if uid in user_encoder: return jsonify({"status": "success", "userId": uid})
+        return jsonify({"error": "User not found"}), 404
+    except: return jsonify({"error": "Invalid format"}), 400
+
 @app.route('/health')
 def health(): return jsonify({"status": "ok", "mae": app_mae, "accuracy": app_accuracy})
 
