@@ -122,11 +122,13 @@ def predict():
         results = []
         if valid_encs:
             print(f">>> [PREDICT] Running model.predict for {len(valid_encs)} items...")
-            u_arr = np.full(len(valid_encs), user_enc)
-            m_arr = np.array(valid_encs)
             
-            # Predict
-            batch_preds = model.predict([u_arr, m_arr], verbose=0).flatten()
+            # ✅ Strict Type Casting (Prevents 502 crashes)
+            u_arr = np.array([user_enc] * len(valid_encs), dtype=np.int32)
+            m_arr = np.array(valid_encs, dtype=np.int32)
+            
+            # Predict with explicit batch size
+            batch_preds = model.predict([u_arr, m_arr], batch_size=len(valid_encs), verbose=0).flatten()
             print(">>> [PREDICT] Model prediction successful.")
 
             user_rating_count = len(ratings[ratings['userId'] == user_id]) if not ratings.empty else 0
@@ -198,12 +200,15 @@ def recommend():
                 valid_encs.append(enc)
 
         if not valid_encs:
+            print(">>> [RECS] No valid encodings found for unseen movies.")
             return jsonify({"recommendations": [], "count": 0, "userId": user_id})
 
-        # ✅ Batch Prediction
-        u_arr = np.full(len(valid_encs), user_enc)
-        m_arr = np.array(valid_encs)
-        batch_preds = model.predict([u_arr, m_arr], verbose=0).flatten()
+        # ✅ Strict Type Casting
+        print(f">>> [RECS] Predicting for {len(valid_encs)} movies...")
+        u_arr = np.array([user_enc] * len(valid_encs), dtype=np.int32)
+        m_arr = np.array(valid_encs, dtype=np.int32)
+        batch_preds = model.predict([u_arr, m_arr], batch_size=len(valid_encs), verbose=0).flatten()
+        print(">>> [RECS] Prediction successful.")
 
         predictions = list(zip(valid_mids, batch_preds))
         predictions.sort(key=lambda x: x[1], reverse=True)
