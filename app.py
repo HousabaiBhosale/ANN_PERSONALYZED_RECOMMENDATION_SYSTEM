@@ -169,7 +169,64 @@ def rate():
         uid, mid, r = int(data['userId']), int(data['movieId']), float(data['rating'])
         new = pd.DataFrame({"userId": [uid], "movieId": [mid], "rating": [r]})
         ratings = pd.concat([ratings, new], ignore_index=True)
-        return jsonify({"message": "Rating added"})
+        return jsonify({
+            "message": "Rating recorded successfully!",
+            "userId": uid,
+            "movieId": mid,
+            "rating": r
+        })
+    except Exception as e: return handle_exception(e)
+
+@app.route('/movies/search')
+def search_movies():
+    try:
+        q = request.args.get('q', '').lower()
+        if not q or movies.empty: return jsonify({"results": [], "count": 0})
+        res = movies[movies['title'].str.lower().str.contains(q, na=False)].head(20)
+        results = []
+        has_genres = 'genres' in movies.columns
+        for _, row in res.iterrows():
+            results.append({
+                "movieId": int(row['movieId']),
+                "title": row['title'],
+                "genres": row['genres'] if has_genres else "N/A"
+            })
+        return jsonify({"results": results, "count": len(results)})
+    except Exception as e: return handle_exception(e)
+
+@app.route('/user/<int:uid>/ratings')
+def user_ratings(uid):
+    try:
+        if ratings.empty: return jsonify({"ratings": []})
+        u_ratings = ratings[ratings['userId'] == uid]
+        res = []
+        for _, row in u_ratings.iterrows():
+            mid = int(row['movieId'])
+            m_df = movies[movies['movieId'] == mid] if not movies.empty else pd.DataFrame()
+            res.append({
+                "movieId": mid,
+                "title": m_df.iloc[0]['title'] if not m_df.empty else f"Movie #{mid}",
+                "rating": float(row['rating'])
+            })
+        return jsonify({"ratings": res})
+    except Exception as e: return handle_exception(e)
+
+@app.route('/upload', methods=['POST'])
+def upload():
+    try:
+        global ratings
+        if 'file' not in request.files: return jsonify({"error": "No file part"}), 400
+        file = request.files['file']
+        if file.filename == '': return jsonify({"error": "No selected file"}), 400
+        if file and file.filename.endswith('.csv'):
+            new_data = pd.read_csv(file)
+            required = ['userId', 'movieId', 'rating']
+            if all(col in new_data.columns for col in required):
+                ratings = pd.concat([ratings, new_data[required]], ignore_index=True)
+                return jsonify({"message": f"Successfully uploaded {len(new_data)} ratings"})
+            else:
+                return jsonify({"error": f"Invalid CSV format. Required columns: {', '.join(required)}"}), 400
+        return jsonify({"error": "Invalid file type. Please upload a CSV."}), 400
     except Exception as e: return handle_exception(e)
 
 @app.route('/login', methods=['POST'])
