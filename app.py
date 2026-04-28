@@ -76,171 +76,174 @@ def index():
     return render_template("index.html")
 
 
+# Global Error Handler (Ensures JSON is always returned)
+@app.errorhandler(Exception)
+def handle_exception(e):
+    print(f"Server Error: {e}")
+    return jsonify({"error": str(e)}), 500
+
+
 # Predict rating
 @app.route('/predict', methods=['POST'])
 def predict():
-    data = request.json
-    user_id = data['userId']
-    movie_id_input = data['movieId']
+    try:
+        data = request.json
+        user_id = int(data['userId']) # Ensure integer
+        movie_id_input = data['movieId']
 
-    user_enc = user_encoder.get(user_id)
-    if user_enc is None:
-        return jsonify({"error": "Invalid user"})
+        user_enc = user_encoder.get(user_id)
+        if user_enc is None:
+            return jsonify({"error": f"User ID {user_id} not found in training data"}), 404
 
-    if isinstance(movie_id_input, str) and ',' in movie_id_input:
-        movie_ids = [int(m.strip()) for m in movie_id_input.split(',')]
-    elif isinstance(movie_id_input, list):
-        movie_ids = [int(m) for m in movie_id_input]
-    else:
-        movie_ids = [int(movie_id_input)]
+        if isinstance(movie_id_input, str) and ',' in movie_id_input:
+            movie_ids = [int(m.strip()) for m in movie_id_input.split(',')]
+        elif isinstance(movie_id_input, list):
+            movie_ids = [int(m) for m in movie_id_input]
+        else:
+            movie_ids = [int(movie_id_input)]
 
-    # Collect valid encodings for batch prediction
-    valid_mids = []
-    valid_encs = []
-    for mid in movie_ids:
-        enc = movie_encoder.get(mid)
-        if enc is not None:
-            valid_mids.append(mid)
-            valid_encs.append(enc)
+        # Collect valid encodings for batch prediction
+        valid_mids = []
+        valid_encs = []
+        for mid in movie_ids:
+            try:
+                mid_int = int(mid)
+                enc = movie_encoder.get(mid_int)
+                if enc is not None:
+                    valid_mids.append(mid_int)
+                    valid_encs.append(enc)
+            except: continue
 
-    results = []
-    if valid_encs:
-        # ✅ Batch Prediction
-        u_arr = np.full(len(valid_encs), user_enc)
-        m_arr = np.array(valid_encs)
-        batch_preds = model.predict([u_arr, m_arr], verbose=0).flatten()
+        results = []
+        if valid_encs:
+            # ✅ Batch Prediction
+            u_arr = np.full(len(valid_encs), user_enc)
+            m_arr = np.array(valid_encs)
+            batch_preds = model.predict([u_arr, m_arr], verbose=0).flatten()
 
-        user_rating_count = len(ratings[ratings['userId'] == user_id])
-        
-        for mid, score in zip(valid_mids, batch_preds):
-            rating = float(score * 5.0)
-            confidence = min(99.9, 50.0 + (user_rating_count * 0.5) - abs(rating - 3.0)*2.0)
+            user_rating_count = len(ratings[ratings['userId'] == user_id]) if not ratings.empty else 0
             
-            movie_df = movies[movies['movieId'] == mid]
-            movie_data = {
-                "title": movie_df.iloc[0]['title'] if not movie_df.empty else f"Movie #{mid}",
-                "genres": movie_df.iloc[0].get('genres', '') if not movie_df.empty else ''
-            }
+            for mid, score in zip(valid_mids, batch_preds):
+                rating = float(score * 5.0)
+                confidence = min(99.9, 50.0 + (user_rating_count * 0.5) - abs(rating - 3.0)*2.0)
+                
+                movie_df = movies[movies['movieId'] == mid] if not movies.empty else pd.DataFrame()
+                movie_data = {
+                    "title": movie_df.iloc[0]['title'] if not movie_df.empty else f"Movie #{mid}",
+                    "genres": movie_df.iloc[0].get('genres', '') if not movie_df.empty else ''
+                }
 
-            results.append({
-                "predicted_rating": rating,
-                "confidence_score": round(confidence, 1),
-                "userId": user_id,
-                "movieId": mid,
-                "movie": movie_data
-            })
+                results.append({
+                    "predicted_rating": rating,
+                    "confidence_score": round(confidence, 1),
+                    "userId": user_id,
+                    "movieId": mid,
+                    "movie": movie_data
+                })
 
-    # Add back errors for invalid movies
-    invalid_mids = [mid for mid in movie_ids if mid not in valid_mids]
-    for mid in invalid_mids:
-        results.append({"movieId": mid, "error": "Invalid movie", "predicted_rating": 0})
+        # Add back errors for invalid movies
+        invalid_mids = [mid for mid in movie_ids if mid not in valid_mids]
+        for mid in invalid_mids:
+            results.append({"movieId": mid, "error": "Invalid movie ID", "predicted_rating": 0})
 
-    if len(results) == 1:
-        return jsonify(results[0])
-    return jsonify({"predictions": results})
+        if len(results) == 1:
+            return jsonify(results[0])
+        return jsonify({"predictions": results})
+    except Exception as e:
+        return handle_exception(e)
 
 
 # Recommend movies
 @app.route('/recommend', methods=['POST'])
 def recommend():
-    data = request.json
-    user_id = data['userId']
-    n = data.get('n', 10)
-    genre_filter = data.get('genre', '').lower()
+    try:
+        data = request.json
+        user_id = int(data['userId'])
+        n = int(data.get('n', 10))
+        genre_filter = str(data.get('genre', '')).lower()
 
-    if user_id not in user_encoder:
-        return jsonify({"error": "User not found"})
+        if user_id not in user_encoder:
+            return jsonify({"error": f"User ID {user_id} not found in training data"}), 404
 
-    user_enc = user_encoder[user_id]
-    watched = ratings[ratings['userId'] == user_id]['movieId'].values
-    unseen = [m for m in all_movie_ids if m not in watched]
+        user_enc = user_encoder[user_id]
+        watched = ratings[ratings['userId'] == user_id]['movieId'].values if not ratings.empty else []
+        unseen = [m for m in all_movie_ids if m not in watched]
 
-    if genre_filter and 'genres' in movies.columns:
-        valid_movies = movies[
-            movies['genres'].str.lower().str.contains(genre_filter, na=False)
-        ]['movieId'].values
-        unseen = [m for m in unseen if m in valid_movies]
+        if genre_filter and not movies.empty and 'genres' in movies.columns:
+            valid_movies = movies[
+                movies['genres'].str.lower().str.contains(genre_filter, na=False)
+            ]['movieId'].values
+            unseen = [m for m in unseen if m in valid_movies]
 
-    # Limit to top 400 potential candidates for stability
-    unseen = unseen[:400]
-    
-    # Collect valid encodings for batch prediction
-    valid_mids = []
-    valid_encs = []
-    for mid in unseen:
-        enc = movie_encoder.get(mid)
-        if enc is not None:
-            valid_mids.append(mid)
-            valid_encs.append(enc)
+        # Limit for stability
+        unseen = unseen[:400]
+        
+        # Collect valid encodings for batch prediction
+        valid_mids = []
+        valid_encs = []
+        for mid in unseen:
+            enc = movie_encoder.get(int(mid))
+            if enc is not None:
+                valid_mids.append(int(mid))
+                valid_encs.append(enc)
 
-    if not valid_encs:
-        return jsonify({"recommendations": [], "count": 0, "userId": user_id})
+        if not valid_encs:
+            return jsonify({"recommendations": [], "count": 0, "userId": user_id})
 
-    # ✅ Batch Prediction (Fast & Stable)
-    u_arr = np.full(len(valid_encs), user_enc)
-    m_arr = np.array(valid_encs)
-    batch_preds = model.predict([u_arr, m_arr], verbose=0).flatten()
+        # ✅ Batch Prediction
+        u_arr = np.full(len(valid_encs), user_enc)
+        m_arr = np.array(valid_encs)
+        batch_preds = model.predict([u_arr, m_arr], verbose=0).flatten()
 
-    predictions = list(zip(valid_mids, batch_preds))
-    predictions.sort(key=lambda x: x[1], reverse=True)
-    
-    top = predictions[:n]
-    result = []
-    for movie_id, score in top:
-        movie_df = movies[movies['movieId'] == movie_id]
-        if not movie_df.empty:
-            movie = movie_df.iloc[0]
+        predictions = list(zip(valid_mids, batch_preds))
+        predictions.sort(key=lambda x: x[1], reverse=True)
+        
+        top = predictions[:n]
+        result = []
+        for movie_id, score in top:
+            movie_df = movies[movies['movieId'] == movie_id] if not movies.empty else pd.DataFrame()
             result.append({
                 "movieId": int(movie_id),
-                "title": movie['title'],
-                "genres": movie.get('genres', ''),
+                "title": movie_df.iloc[0]['title'] if not movie_df.empty else f"Movie #{movie_id}",
+                "genres": movie_df.iloc[0].get('genres', '') if not movie_df.empty else '',
                 "predicted_rating": float(score * 5.0)
             })
 
-    return jsonify({
-        "recommendations": result,
-        "count": len(result),
-        "userId": user_id
-    })
+        return jsonify({
+            "recommendations": result,
+            "count": len(result),
+            "userId": user_id
+        })
+    except Exception as e:
+        return handle_exception(e)
 
 
 # Rate movie
 @app.route('/rate', methods=['POST'])
 def rate():
-    global ratings
-    data = request.json
+    try:
+        global ratings
+        data = request.json
+        uid = int(data['userId'])
+        mid = int(data['movieId'])
+        rating = float(data['rating'])
 
-    new = pd.DataFrame({
-        "userId": [data['userId']],
-        "movieId": [data['movieId']],
-        "rating": [data['rating']]
-    })
-
-    ratings = pd.concat([ratings, new], ignore_index=True)
-
-    return jsonify({
-        "message": "Rating added",
-        "userId": data['userId'],
-        "movieId": data['movieId'],
-        "rating": data['rating']
-    })
+        new = pd.DataFrame({"userId": [uid], "movieId": [mid], "rating": [rating]})
+        ratings = pd.concat([ratings, new], ignore_index=True)
+        return jsonify({"message": "Rating added", "userId": uid, "movieId": mid, "rating": rating})
+    except Exception as e:
+        return handle_exception(e)
 
 
 @app.route('/login', methods=['POST'])
 def login():
-    data = request.json
-    user_id = data.get('userId')
-
-    if not user_id:
-        return jsonify({"error": "User ID required"}), 400
-
     try:
-        uid = int(user_id)
-        if uid in user_encoder:
-            return jsonify({"status": "success", "userId": uid})
-        else:
-            return jsonify({"error": "User not found"}), 404
-    except ValueError:
+        data = request.json
+        user_id = int(data.get('userId'))
+        if user_id in user_encoder:
+            return jsonify({"status": "success", "userId": user_id})
+        return jsonify({"error": f"User ID {user_id} not found"}), 404
+    except:
         return jsonify({"error": "Invalid format"}), 400
 
 
