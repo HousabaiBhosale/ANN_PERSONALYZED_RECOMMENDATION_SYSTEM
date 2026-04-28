@@ -106,10 +106,18 @@ def predict():
                 rating = float(score * 5.0)
                 conf = min(99.9, 50.0 + (u_count * 0.5) - abs(rating - 3.0)*2.0)
                 m_df = movies[movies['movieId'] == mid] if not movies.empty else pd.DataFrame()
+                
+                movie_data = None
+                if not m_df.empty:
+                    movie_data = {
+                        "title": m_df.iloc[0]['title'],
+                        "genres": m_df.iloc[0]['genres'] if 'genres' in m_df.columns else "N/A"
+                    }
+                
                 results.append({
                     "predicted_rating": rating, "confidence_score": round(conf, 1),
                     "userId": u_id, "movieId": mid,
-                    "movie": {"title": m_df.iloc[0]['title'], "genres": m_df.iloc[0].get('genres', '')} if not m_df.empty else None
+                    "movie": movie_data
                 })
         for m in [i for i in mids if i not in v_mids]:
             results.append({"movieId": m, "error": "Invalid movie ID", "predicted_rating": 0})
@@ -126,21 +134,30 @@ def recommend():
         u_enc = user_encoder[u_id]
         watched = ratings[ratings['userId'] == u_id]['movieId'].values if not ratings.empty else []
         unseen = [m for m in all_movie_ids if m not in watched]
-        if genre and not movies.empty:
+        if genre and not movies.empty and 'genres' in movies.columns:
             v_movies = movies[movies['genres'].str.lower().str.contains(genre, na=False)]['movieId'].values
             unseen = [m for m in unseen if m in v_movies]
+        
         unseen = unseen[:200]
         v_mids, v_encs = [], []
         for mid in unseen:
             enc = movie_encoder.get(mid)
             if enc is not None: v_mids.append(mid); v_encs.append(enc)
+
         if not v_encs: return jsonify({"recommendations": [], "userId": u_id})
+        
         batch_preds = ann_predict([u_enc]*len(v_encs), v_encs)
         preds = sorted(zip(v_mids, batch_preds), key=lambda x: x[1], reverse=True)[:n]
+        
         res = []
         for mid, score in preds:
-            m_df = movies[movies['movieId'] == mid]
-            res.append({"movieId": int(mid), "title": m_df.iloc[0]['title'], "genres": m_df.iloc[0].get('genres', ''), "predicted_rating": float(score * 5.0)})
+            m_df = movies[movies['movieId'] == mid] if not movies.empty else pd.DataFrame()
+            res.append({
+                "movieId": int(mid), 
+                "title": m_df.iloc[0]['title'] if not m_df.empty else f"Movie #{mid}",
+                "genres": m_df.iloc[0]['genres'] if not m_df.empty and 'genres' in m_df.columns else "N/A",
+                "predicted_rating": float(score * 5.0)
+            })
         return jsonify({"recommendations": res, "userId": u_id})
     except Exception as e: return handle_exception(e)
 
