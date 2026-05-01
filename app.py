@@ -253,5 +253,15 @@ def popular_movies():
         if not m.empty: res.append({"movieId": int(mid), "title": m.iloc[0]['title'], "predicted_rating": float(pop.loc[mid, 'avg'])})
     return jsonify({"popular": res})
 
+@app.route('/user/random')
+def random_user():
+    if ratings.empty: return jsonify({"error": "No data"}), 404
+    u_id = int(ratings['userId'].sample(1).iloc[0])
+    return jsonify({"userId": u_id})
+
+@app.route('/favicon.ico')
+def favicon():
+    return '', 204
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))

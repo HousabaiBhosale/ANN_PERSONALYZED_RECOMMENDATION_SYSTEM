@@ -469,6 +469,8 @@ canvas{display:block}
       <div class="nav-tabs" id="nav-tabs">
         <button class="nav-tab active" id="nt-login" onclick="goTo('login')">LOGIN</button>
         <button class="nav-tab" id="nt-home" style="display:none" onclick="goTo('home')">HOME</button>
+        <button class="nav-tab" id="nt-architecture" style="display:none" onclick="goTo('architecture')">ARCHITECTURE</button>
+        <button class="nav-tab" id="nt-about" style="display:none" onclick="goTo('about')">ABOUT</button>
         <button class="nav-tab" id="nt-predict" style="display:none" onclick="goTo('predict')">PREDICT</button>
         <button class="nav-tab" id="nt-recommend" style="display:none" onclick="goTo('recommend')">RECS</button>
         <button class="nav-tab" id="nt-rate" style="display:none" onclick="goTo('rate')">RATE</button>
@@ -494,7 +496,172 @@ canvas{display:block}
         <input type="number" id="login-uid" class="field" placeholder="e.g. 1" onkeydown="if(event.key==='Enter')doLogin()"/>
         <p id="login-err" class="err-msg"></p>
       </div>
-      <button class="btn-gold w-full" id="login-btn" onclick="doLogin()" style="width:100%;text-align:center">AUTHENTICATE →</button>
+      <button class="btn-gold w-full" id="login-btn" onclick="doLogin()" style="width:100%;text-align:center;margin-bottom:12px">AUTHENTICATE →</button>
+      <button class="btn-outline w-full" id="guest-btn" onclick="loginAsRandomGuest()" style="width:100%;text-align:center">LOGIN AS RANDOM GUEST</button>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════ PAGE: ABOUT ════════════ -->
+<section class="page" id="page-about">
+  <div style="max-width:1000px;margin:0 auto;padding:32px 24px 64px">
+    <div style="text-align:center;margin-bottom:48px" class="fr">
+      <div class="page-eyebrow">Project Intelligence</div>
+      <h1 class="page-title">About the<br><em>Project</em></h1>
+      <p style="font-size:1rem;color:var(--sepia)">CineANN is a research-driven movie recommendation system that bridges the gap between deep learning and cinema.</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-bottom:60px" class="fr-1">
+      <div>
+        <div class="sec-label">Mission</div>
+        <p style="font-size:1.1rem;line-height:1.7;color:var(--ink)">
+          Our goal was to create a personalized cinematic experience where technology disappears, leaving only the perfect recommendation. By leveraging Artificial Neural Networks, we analyze thousands of latent movie features to find the hidden patterns in what you love.
+        </p>
+      </div>
+      <div>
+        <div class="sec-label">Technology</div>
+        <p style="font-size:1rem;line-height:1.7;color:var(--sepia)">
+          Built with a Python/Flask backend and a custom pure-NumPy inference engine, CineANN is optimized for speed and stability. The frontend utilizes a unique vintage-inspired design system we call "Lumina Noir."
+        </p>
+      </div>
+    </div>
+
+    <div class="sec-label fr-2">The Visionaries</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:60px" class="fr-3">
+      <!-- Shiv -->
+      <div class="panel" style="padding:32px;text-align:center;border-color:var(--border-gold)">
+        <div style="width:80px;height:80px;background:var(--parchment);margin:0 auto 20px;display:flex;align-items:center;justify-content:center;font-size:1.8rem;border:1px solid var(--gold)">S</div>
+        <h3 style="font-family:'Playfair Display',serif;font-size:1.3rem;margin-bottom:6px">Shiv</h3>
+        <div class="card-genre" style="margin-bottom:14px">Team Lead</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:0.65rem;color:var(--sepia);line-height:1.6">
+          Architect of the Frontend Experience & Project Strategy.
+        </div>
+      </div>
+
+      <!-- Housa -->
+      <div class="panel" style="padding:32px;text-align:center">
+        <div style="width:80px;height:80px;background:var(--parchment);margin:0 auto 20px;display:flex;align-items:center;justify-content:center;font-size:1.8rem;border:1px solid var(--border)">H</div>
+        <h3 style="font-family:'Playfair Display',serif;font-size:1.3rem;margin-bottom:6px">Housa</h3>
+        <div class="card-genre" style="margin-bottom:14px">Backend Dev</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:0.65rem;color:var(--sepia);line-height:1.6">
+          System Infrastructure & Robust API Integration.
+        </div>
+      </div>
+
+      <!-- Aishwarya -->
+      <div class="panel" style="padding:32px;text-align:center">
+        <div style="width:80px;height:80px;background:var(--parchment);margin:0 auto 20px;display:flex;align-items:center;justify-content:center;font-size:1.8rem;border:1px solid var(--border)">A</div>
+        <h3 style="font-family:'Playfair Display',serif;font-size:1.3rem;margin-bottom:6px">Aishwarya</h3>
+        <div class="card-genre" style="margin-bottom:14px">ML Engineer</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:0.65rem;color:var(--sepia);line-height:1.6">
+          ANN Architecture & Data Processing Logic.
+        </div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1.5fr 1fr;gap:40px;align-items:center" class="fr-4">
+      <div class="panel panel-gold" style="padding:32px">
+        <div class="sec-label">Future Roadmap</div>
+        <ul style="list-style:none;font-size:0.9rem;color:var(--sepia);display:flex;flex-direction:column;gap:12px">
+          <li>🚀 <strong>Phase 2:</strong> Visual Metadata integration with TMDB API.</li>
+          <li>📱 <strong>Phase 3:</strong> Progressive Web App (PWA) for mobile devices.</li>
+          <li>🧠 <strong>Phase 4:</strong> Real-time model retraining on the cloud.</li>
+        </ul>
+      </div>
+      <div style="text-align:center">
+        <div class="sec-label">Open Source</div>
+        <button class="btn-ink" style="width:100%" onclick="window.open('https://github.com/Shiv04092004/ANN-PERSONALIZED-RECOMMENDATION-SYSTEM', '_blank')">VIEW ON GITHUB</button>
+        <p style="font-size:0.65rem;color:var(--sepia);margin-top:10px;font-family:'IBM Plex Mono',monospace">Licensed under MIT</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════ PAGE: ARCHITECTURE ════════════ -->
+<section class="page" id="page-architecture">
+  <div style="max-width:900px;margin:0 auto;padding:32px 24px 64px">
+    <div style="text-align:center;margin-bottom:48px" class="fr">
+      <div class="page-eyebrow">Neural Network Blueprint</div>
+      <h1 class="page-title">The Neural<br><em>Architecture</em></h1>
+      <p style="font-size:1rem;color:var(--sepia)">A technical deep-dive into the Artificial Neural Network powering CineANN.</p>
+    </div>
+
+    <div class="grid-2" style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start">
+      <div class="fr-1">
+        <div class="sec-label">Layer Stack</div>
+        <div class="panel" style="padding:24px;background:rgba(26,18,8,0.02)">
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div class="stat-card" style="padding:15px">
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:var(--gold)">01. INPUT</span>
+                <span class="rank-badge rank-n">IDs (User, Movie)</span>
+              </div>
+            </div>
+            <div style="text-align:center;color:var(--gold);font-size:0.8rem">↓</div>
+            <div class="stat-card" style="padding:15px;border-color:var(--gold)">
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:var(--gold)">02. EMBEDDINGS</span>
+                <span class="rank-badge rank-1">50-Dim Latent Vectors</span>
+              </div>
+            </div>
+            <div style="text-align:center;color:var(--gold);font-size:0.8rem">↓</div>
+            <div class="stat-card" style="padding:15px">
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:var(--gold)">03. CONCATENATE</span>
+                <span class="rank-badge rank-n">100-Dim Combined</span>
+              </div>
+            </div>
+            <div style="text-align:center;color:var(--gold);font-size:0.8rem">↓</div>
+            <div class="stat-card" style="padding:15px">
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:var(--gold)">04. DENSE LAYER 1</span>
+                <span class="rank-badge rank-n">128 Neurons (ReLU)</span>
+              </div>
+            </div>
+            <div style="text-align:center;color:var(--gold);font-size:0.8rem">↓</div>
+            <div class="stat-card" style="padding:15px">
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:var(--gold)">05. DENSE LAYER 2</span>
+                <span class="rank-badge rank-n">64 Neurons (ReLU)</span>
+              </div>
+            </div>
+            <div style="text-align:center;color:var(--gold);font-size:0.8rem">↓</div>
+            <div class="stat-card" style="padding:15px;background:var(--ink);color:white">
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:var(--gold-bright)">06. OUTPUT</span>
+                <span class="rank-badge rank-1">Sigmoid (0.0 - 5.0)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="fr-2">
+        <div class="sec-label">Mathematical Logic</div>
+        <div style="font-size:0.95rem;color:var(--sepia);line-height:1.7">
+          <p style="margin-bottom:20px">
+            The system treats recommendation as a <strong>Regression Problem</strong>. Instead of just finding similar movies, the ANN tries to predict the <em>precise rating</em> a user would give to a movie they haven't seen.
+          </p>
+          <div class="panel" style="padding:20px;margin-bottom:20px">
+            <h4 style="font-family:'Playfair Display',serif;margin-bottom:8px">1. Embedding Space</h4>
+            <p style="font-size:0.85rem">
+              Users and Movies are mapped into a high-dimensional <strong>latent space</strong>. Two points close to each other in this space indicate a high probability of a positive interaction.
+            </p>
+          </div>
+          <div class="panel" style="padding:20px;margin-bottom:20px">
+            <h4 style="font-family:'Playfair Display',serif;margin-bottom:8px">2. Non-Linear Patterns</h4>
+            <p style="font-size:0.85rem">
+              By using <strong>ReLU (Rectified Linear Unit)</strong> activation functions in the hidden layers, the network can learn complex, non-linear relationships that traditional matrix factorization misses.
+            </p>
+          </div>
+          <div class="panel" style="padding:20px">
+            <h4 style="font-family:'Playfair Display',serif;margin-bottom:8px">3. Pure NumPy Inference</h4>
+            <p style="font-size:0.85rem">
+              To ensure lightning-fast performance, the production engine uses a <strong>zero-dependency NumPy implementation</strong> of the weights, avoiding the overhead of heavy frameworks like TensorFlow during live use.
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -960,7 +1127,7 @@ document.addEventListener('mousemove',e=>{
 
 /* ── ROUTER ── */
 let currentUser = null;
-const pages = ['home','login','predict','recommend','rate','upload','search','analysis'];
+const pages = ['home','login','predict','recommend','rate','upload','search','analysis','architecture','about'];
 function goTo(pg, silent=false){
   if(!currentUser && pg!=='login'){
     if(!silent) toast('Please login first','err');
@@ -1293,6 +1460,19 @@ function quickPredict(mid){document.getElementById('pr-mid').value=mid;goTo('pre
 function quickRate(mid){document.getElementById('rt-mid').value=mid;goTo('rate');}
 
 /* ── LOGIN / LOGOUT ── */
+let isGuest = false;
+
+async function loginAsRandomGuest(){
+  setLoading('guest-btn',true);
+  try{
+    const d=await api('/user/random');
+    document.getElementById('login-uid').value=d.userId;
+    isGuest = true;
+    await doLogin();
+  }catch(e){toast('Could not get random user','err');}
+  finally{setLoading('guest-btn',false,'LOGIN AS RANDOM GUEST');}
+}
+
 async function doLogin(){
   const uid=document.getElementById('login-uid').value.trim();
   const err=document.getElementById('login-err');
@@ -1301,7 +1481,7 @@ async function doLogin(){
   try{
     const d=await api('/login',{method:'POST',body:JSON.stringify({userId:+uid})});
     currentUser=d.userId;
-    document.getElementById('uid-label').textContent=`USER #${currentUser}`;
+    document.getElementById('uid-label').textContent = isGuest ? "GUEST" : `USER #${currentUser}`;
     document.getElementById('user-info').style.display='flex';
     document.querySelectorAll('#nav-tabs .nav-tab').forEach(b=>b.style.display='inline-block');
     document.getElementById('nt-login').style.display='none';
@@ -1320,10 +1500,14 @@ async function doLogin(){
 
 function doLogout(){
   currentUser=null;
+  isGuest = false;
   document.getElementById('user-info').style.display='none';
   document.querySelectorAll('#nav-tabs .nav-tab').forEach(b=>b.style.display='none');
   document.getElementById('nt-login').style.display='inline-block';
-  ['pr-uid','rc-uid','rt-uid','pr-mid','rt-mid','rt-rating','rc-genre'].forEach(id=>document.getElementById(id).value='');
+  ['login-uid','pr-uid','rc-uid','rt-uid','pr-mid','rt-mid','rt-rating','rc-genre'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) el.value='';
+  });
   document.getElementById('pr-results-grid').innerHTML='';
   document.getElementById('pr-result-wrap').style.display='none';
   const rcGrid=document.getElementById('rc-grid');if(rcGrid)rcGrid.innerHTML='';
