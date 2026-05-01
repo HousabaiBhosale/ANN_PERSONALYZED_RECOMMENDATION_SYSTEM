@@ -1317,6 +1317,27 @@
     @media (max-width: 768px) {
       .splash-stats { gap: 20px; }
       .splash-logo { font-size: 4rem; }
+      
+      /* Mobile Navigation */
+      .nav-inner { padding: 0 16px; }
+      .nav-tabs {
+        overflow-x: auto;
+        white-space: nowrap;
+        padding-bottom: 4px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+      }
+      .nav-tabs::-webkit-scrollbar { display: none; }
+      .nav-tab { padding: 8px 10px; font-size: 0.55rem; }
+
+      /* About Page Responsiveness */
+      .responsive-grid {
+        grid-template-columns: 1fr !important;
+        gap: 30px !important;
+      }
+      
+      .page-title { font-size: 2.2rem; }
+      .panel { padding: 20px !important; }
     }
   </style>
 </head>
@@ -1440,7 +1461,7 @@
           bridges the gap between deep learning and cinema.</p>
       </div>
 
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-bottom:60px" class="fr-1">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-bottom:60px" class="fr-1 responsive-grid">
         <div>
           <div class="sec-label">Mission</div>
           <p style="font-size:1.1rem;line-height:1.7;color:var(--ink)">
@@ -1459,7 +1480,7 @@
       </div>
 
       <div class="sec-label fr-2">The Visionaries</div>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:60px" class="fr-3">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:60px" class="fr-3 responsive-grid">
         <!-- Shiv -->
         <div class="panel" style="padding:32px;text-align:center;border-color:var(--border-gold)">
           <div
@@ -1497,7 +1518,7 @@
         </div>
       </div>
 
-      <div style="display:grid;grid-template-columns:1.5fr 1fr;gap:40px;align-items:center" class="fr-4">
+      <div style="display:grid;grid-template-columns:1.5fr 1fr;gap:40px;align-items:center" class="fr-4 responsive-grid">
         <div class="panel panel-gold" style="padding:32px">
           <div class="sec-label">Future Roadmap</div>
           <ul style="list-style:none;font-size:0.9rem;color:var(--sepia);display:flex;flex-direction:column;gap:12px">
