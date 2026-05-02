@@ -41,13 +41,32 @@
 
 ---
 
-## 🏗️ Architecture
+## 🧠 Deep Dive: How the ANN Works
 
-The system uses a **Matrix Factorization** approach implemented via a Neural Network:
-1. **Embedding Layers**: High-dimensional vectors for both Users and Movies.
-2. **Concatenation**: Merging user and movie vectors to find latent relationships.
-3. **Dense Layers**: Fully connected layers with ReLU activation to learn non-linear patterns.
-4. **Output Layer**: A Sigmoid-activated neuron (scaled 0-5) providing the final predicted rating.
+The core of **CineANN** is a multi-layered Artificial Neural Network (ANN) that performs **Collaborative Filtering** through deep embeddings. Unlike traditional algorithms that use simple similarity scores, this system learns the latent relationships between users and movies.
+
+### 1. The Embedding Layer (Latent Space)
+Every `userId` and `movieId` is passed through an **Embedding Layer**. 
+- These layers convert categorical IDs into dense, high-dimensional vectors (50 dimensions).
+- During training, the network adjusts these vectors so that users with similar tastes (and movies with similar attributes) are positioned close together in this "Latent Space."
+
+### 2. Feature Fusion (Concatenation)
+The user vector and movie vector are concatenated into a single 100-dimensional vector. This allows the network to evaluate the specific interaction between *that* user and *that* movie simultaneously.
+
+### 3. Deep Learning (Fully Connected Layers)
+The fused vector passes through a series of **Dense (Linear) Layers**:
+- **Layer 1 (128 Neurons)**: Extracts complex, non-linear patterns (e.g., "This user likes 90s action but only if it's rated above 3 stars").
+- **Layer 2 (64 Neurons)**: Refines these features for the final decision.
+- **Activation**: We use **ReLU** (Rectified Linear Unit) to introduce non-linearity, allowing the model to learn complex preferences.
+
+### 4. The Output Layer (Rating Prediction)
+The final neuron uses a **Sigmoid Activation Function**, which outputs a value between 0 and 1. We scale this value by **5.0** to provide a final predicted rating (e.g., 4.2 stars).
+
+### 5. Production Optimization: The NumPy Inference Engine
+In a typical production environment, loading the heavy TensorFlow framework for every request is slow and memory-intensive. 
+- **CineANN** uses a custom-built **Pure NumPy Inference Engine**. 
+- We extracted the trained weights from the Keras model and replicated the neural logic using matrix multiplication (`@` operator). 
+- This results in **sub-millisecond prediction times** and near-zero memory footprint.
 
 ---
 
