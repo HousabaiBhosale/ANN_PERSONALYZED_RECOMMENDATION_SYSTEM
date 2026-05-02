@@ -2451,6 +2451,7 @@
         currentRecommendations = recs;
         document.getElementById('rc-dl-btn').style.display = recs.length ? 'block' : 'none';
         document.getElementById('rc-result-wrap').style.display = 'block';
+        document.getElementById('rc-user-ratings').style.display = 'none'; // Auto-hide rated movies on recommend
         document.getElementById('rc-count').textContent = d.count || recs.length;
         document.getElementById('rc-uid-show').textContent = d.userId;
         document.getElementById('rc-genre-show').textContent = genre || 'ALL';
@@ -2486,9 +2487,17 @@
       const uid = document.getElementById('rc-uid').value.trim();
       if (!uid) { toast('Enter a User ID first', 'err'); return; }
       const wrap = document.getElementById('rc-user-ratings');
+      
+      // Toggle logic: if already showing, hide it
+      if (wrap.style.display === 'block') {
+        wrap.style.display = 'none';
+        return;
+      }
+
       const list = document.getElementById('rc-ratings-list');
       list.innerHTML = '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:0.72rem;color:var(--sepia)"><span class="spinner"></span> Loading…</div>';
       wrap.style.display = 'block';
+      document.getElementById('rc-result-wrap').style.display = 'none'; // Hide recs when viewing ratings
       try {
         const d = await api(`/user/${uid}/ratings`);
         const ratings = d.ratings || [];
