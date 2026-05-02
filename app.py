@@ -293,6 +293,12 @@ def engine_stats():
         ]
     })
 
+@app.route('/user/random')
+def random_user():
+    if ratings.empty: return jsonify({"error": "No data"}), 404
+    u_id = int(ratings['userId'].sample(1).iloc[0])
+    return jsonify({"userId": u_id})
+
 @app.route('/favicon.ico')
 def favicon():
     return '', 204
