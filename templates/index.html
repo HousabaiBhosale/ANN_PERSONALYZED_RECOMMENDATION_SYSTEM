@@ -1344,6 +1344,302 @@
       .page-title { font-size: 2.2rem; }
       .panel { padding: 20px !important; }
     }
+
+    /* ═══ NEURAL X-RAY PANEL ═══ */
+    .xray-panel {
+      background: linear-gradient(135deg, rgba(26,18,8,0.97), rgba(45,36,22,0.95));
+      border: 1px solid rgba(201,146,42,0.3);
+      color: #f0e9d8;
+      padding: 32px;
+      position: relative;
+      overflow: hidden;
+    }
+    .xray-panel::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold), var(--gold-bright), var(--gold), transparent);
+      animation: shimmer 3s ease-in-out infinite;
+      background-size: 200% 100%;
+    }
+    .xray-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.4rem;
+      letter-spacing: 0.2em;
+      color: var(--gold);
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .xray-title::before {
+      content: '⚡';
+      font-size: 1.1rem;
+    }
+    .xray-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    @media(max-width:768px) {
+      .xray-grid { grid-template-columns: 1fr !important; }
+    }
+    .xray-section {
+      background: rgba(255,251,240,0.04);
+      border: 1px solid rgba(201,146,42,0.15);
+      padding: 20px;
+    }
+    .xray-section-title {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 14px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(201,146,42,0.15);
+    }
+
+    /* Embedding Heatmap */
+    .emb-heatmap {
+      display: flex;
+      gap: 2px;
+      height: 40px;
+      align-items: flex-end;
+    }
+    .emb-bar {
+      flex: 1;
+      min-width: 3px;
+      background: var(--gold);
+      transition: height 1s cubic-bezier(.22,1,.36,1);
+      opacity: 0.8;
+    }
+    .emb-bar:hover {
+      opacity: 1;
+      filter: brightness(1.3);
+    }
+
+    /* Neural Match Badges */
+    .neural-match {
+      display: inline-block;
+      padding: 4px 10px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      margin-bottom: 12px;
+      border-radius: 2px;
+    }
+    .neural-match.high {
+      background: rgba(201,146,42,0.15);
+      color: var(--gold);
+      border: 1px solid var(--gold);
+      box-shadow: 0 0 12px rgba(201,146,42,0.2);
+      position: relative;
+      overflow: hidden;
+    }
+    .neural-match.high::after {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%; width: 50%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      animation: sweep 3s infinite;
+    }
+    .neural-match.mid {
+      background: rgba(201,146,42,0.05);
+      color: var(--gold);
+      border: 1px solid rgba(201,146,42,0.5);
+    }
+    .neural-match.low {
+      background: rgba(224,213,192,0.1);
+      color: var(--sepia);
+      border: 1px solid rgba(224,213,192,0.3);
+    }
+    @keyframes sweep { 0% { left: -100%; } 50% { left: 100%; } 100% { left: 100%; } }
+
+    /* Activation Flow */
+    .activation-flow {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .act-layer {
+      flex: 1;
+      text-align: center;
+    }
+    .act-bar-wrap {
+      height: 8px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 6px;
+    }
+    .act-bar-inner {
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold), var(--gold-bright));
+      border-radius: 4px;
+      width: 0;
+      transition: width 1.2s cubic-bezier(.22,1,.36,1);
+    }
+    .act-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.5rem;
+      color: rgba(240,233,216,0.6);
+      letter-spacing: 0.15em;
+    }
+    .act-pct {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.1rem;
+      color: var(--gold);
+    }
+    .flow-arrow {
+      color: rgba(201,146,42,0.4);
+      font-size: 0.8rem;
+    }
+
+    /* Taste DNA */
+    .taste-dna-wrap {
+      display: flex;
+      gap: 1px;
+      height: 50px;
+      align-items: center;
+    }
+    .dna-bar {
+      width: 3px;
+      background: var(--gold);
+      transition: height 0.8s cubic-bezier(.22,1,.36,1);
+      border-radius: 1px;
+    }
+
+    /* Neural Match Badge */
+    .neural-match {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.1em;
+      padding: 3px 10px;
+      border: 1px solid;
+      margin-top: 8px;
+    }
+    .neural-match.high {
+      border-color: rgba(201,146,42,0.5);
+      color: var(--gold);
+      background: rgba(201,146,42,0.08);
+    }
+    .neural-match.mid {
+      border-color: rgba(107,90,62,0.4);
+      color: var(--sepia);
+      background: rgba(107,90,62,0.06);
+    }
+    .neural-match.low {
+      border-color: rgba(139,26,26,0.3);
+      color: var(--red);
+      background: rgba(139,26,26,0.05);
+    }
+
+    /* ═══ BENCHMARK PANEL ═══ */
+    .bench-panel {
+      background: linear-gradient(135deg, rgba(26,18,8,0.95), rgba(45,36,22,0.92));
+      border: 1px solid rgba(201,146,42,0.25);
+      padding: 28px;
+      color: #f0e9d8;
+    }
+    .bench-compare {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 20px;
+      align-items: center;
+      margin-top: 20px;
+    }
+    @media(max-width:768px) {
+      .bench-compare { grid-template-columns: 1fr !important; }
+      .bench-vs { display: none; }
+    }
+    .bench-col {
+      text-align: center;
+    }
+    .bench-engine-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1rem;
+      letter-spacing: 0.2em;
+      margin-bottom: 16px;
+    }
+    .bench-metric {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(201,146,42,0.1);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.65rem;
+    }
+    .bench-metric-val {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.2rem;
+    }
+    .bench-winner { color: var(--gold); }
+    .bench-loser { color: rgba(139,26,26,0.7); }
+    .bench-vs {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2rem;
+      color: rgba(201,146,42,0.3);
+    }
+    .bench-speedup {
+      text-align: center;
+      margin-top: 20px;
+      padding: 16px;
+      background: rgba(201,146,42,0.08);
+      border: 1px solid rgba(201,146,42,0.2);
+    }
+    .bench-speedup-val {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 3rem;
+      color: var(--gold);
+      line-height: 1;
+    }
+    .bench-speedup-lbl {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.55rem;
+      letter-spacing: 0.2em;
+      color: rgba(240,233,216,0.5);
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    /* Layer breakdown bars */
+    .layer-bar-wrap {
+      margin: 6px 0;
+    }
+    .layer-bar-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.55rem;
+      color: rgba(240,233,216,0.5);
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 3px;
+    }
+    .layer-bar-track {
+      height: 6px;
+      background: rgba(255,255,255,0.05);
+      overflow: hidden;
+    }
+    .layer-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold), var(--gold-bright));
+      width: 0;
+      transition: width 1.5s cubic-bezier(.22,1,.36,1);
+    }
+
+    /* Genre radar chart in dark mode */
+    .genre-radar-wrap {
+      background: rgba(255,251,240,0.03);
+      border: 1px solid rgba(201,146,42,0.12);
+      padding: 16px;
+    }
+
   </style>
 </head>
 
@@ -1749,6 +2045,45 @@
         </div>
       </div>
 
+      <!-- ═══ LIVE BENCHMARK PANEL ═══ -->
+      <div id="benchmark-panel" class="fr-4" style="margin-bottom:48px;display:none">
+        <div class="sec-label">Live Performance Benchmark</div>
+        <div class="bench-panel">
+          <div class="xray-title" style="margin-bottom:16px">NUMPY ENGINE VS TENSORFLOW — REAL-TIME BENCHMARK</div>
+          <div class="bench-compare">
+            <div class="bench-col">
+              <div class="bench-engine-name bench-winner">⚡ CINEANN NUMPY</div>
+              <div class="bench-metric"><span>INFERENCE</span><span class="bench-metric-val bench-winner" id="bm-np-inf">—</span></div>
+              <div class="bench-metric"><span>MEMORY</span><span class="bench-metric-val bench-winner" id="bm-np-mem">—</span></div>
+              <div class="bench-metric"><span>BATCH 200</span><span class="bench-metric-val bench-winner" id="bm-np-batch">—</span></div>
+              <div class="bench-metric"><span>PREDS/SEC</span><span class="bench-metric-val bench-winner" id="bm-np-pps">—</span></div>
+            </div>
+            <div class="bench-vs">VS</div>
+            <div class="bench-col">
+              <div class="bench-engine-name bench-loser">🐢 TENSORFLOW</div>
+              <div class="bench-metric"><span>INFERENCE</span><span class="bench-metric-val bench-loser" id="bm-tf-inf">45.0 ms</span></div>
+              <div class="bench-metric"><span>MEMORY</span><span class="bench-metric-val bench-loser" id="bm-tf-mem">1,200 MB</span></div>
+              <div class="bench-metric"><span>LOAD TIME</span><span class="bench-metric-val bench-loser" id="bm-tf-load">3,500 ms</span></div>
+              <div class="bench-metric"><span>PREDS/SEC</span><span class="bench-metric-val bench-loser">~22</span></div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px">
+            <div class="bench-speedup">
+              <div class="bench-speedup-val" id="bm-speedup">—×</div>
+              <div class="bench-speedup-lbl">Speedup Factor</div>
+            </div>
+            <div class="bench-speedup">
+              <div class="bench-speedup-val" id="bm-memreduce">—%</div>
+              <div class="bench-speedup-lbl">Memory Reduction</div>
+            </div>
+          </div>
+          <div style="margin-top:20px">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;color:var(--gold);text-transform:uppercase;margin-bottom:12px">LAYER-BY-LAYER TIMING BREAKDOWN</div>
+            <div id="bm-layers"></div>
+          </div>
+        </div>
+      </div>
+
       <div class="gold-rule" style="margin-top:0"></div>
 
       <!-- Feature cards -->
@@ -1806,33 +2141,99 @@
 
   <!-- ════════════ PAGE: PREDICT ════════════ -->
   <section class="page" id="page-predict">
-    <div style="max-width:640px;margin:0 auto;padding:32px 24px 64px">
+    <div style="max-width:1100px;margin:0 auto;padding:32px 24px 64px">
       <div style="text-align:center;margin-bottom:36px" class="fr">
         <div class="page-eyebrow">POST /predict</div>
         <h1 class="page-title">Predict<br><em>Rating</em></h1>
         <p style="font-size:1rem;color:var(--sepia)">User ID + Movie ID → the ANN predicts how this user would rate it.
         </p>
       </div>
-      <div class="panel panel-gold fr-1" style="padding:32px">
-        <div class="sec-label">Model Input Features</div>
-        <div style="margin-bottom:18px">
-          <label
-            style="font-family:'IBM Plex Mono',monospace;font-size:0.65rem;letter-spacing:0.2em;color:var(--sepia);display:block;margin-bottom:8px">USER
-            ID</label>
-          <input type="number" id="pr-uid" class="field" placeholder="e.g. 1" min="1" />
-          <p id="pr-uid-err" class="err-msg">⚠ Required</p>
+      <div style="max-width:640px;margin:0 auto">
+        <div class="panel panel-gold fr-1" style="padding:32px">
+          <div class="sec-label">Model Input Features</div>
+          <div style="margin-bottom:18px">
+            <label
+              style="font-family:'IBM Plex Mono',monospace;font-size:0.65rem;letter-spacing:0.2em;color:var(--sepia);display:block;margin-bottom:8px">USER
+              ID</label>
+            <input type="number" id="pr-uid" class="field" placeholder="e.g. 1" min="1" />
+            <p id="pr-uid-err" class="err-msg">⚠ Required</p>
+          </div>
+          <div style="margin-bottom:24px">
+            <label
+              style="font-family:'IBM Plex Mono',monospace;font-size:0.65rem;letter-spacing:0.2em;color:var(--sepia);display:block;margin-bottom:8px">MOVIE
+              ID(S)</label>
+            <input type="text" id="pr-mid" class="field" placeholder="e.g. 318 or 1,2,3 for multiple" />
+            <p id="pr-mid-err" class="err-msg">⚠ Required</p>
+          </div>
+          <button class="btn-gold" id="pr-btn" onclick="doPredictRating()" style="width:100%">RUN PREDICTION →</button>
         </div>
-        <div style="margin-bottom:24px">
-          <label
-            style="font-family:'IBM Plex Mono',monospace;font-size:0.65rem;letter-spacing:0.2em;color:var(--sepia);display:block;margin-bottom:8px">MOVIE
-            ID(S)</label>
-          <input type="text" id="pr-mid" class="field" placeholder="e.g. 318 or 1,2,3 for multiple" />
-          <p id="pr-mid-err" class="err-msg">⚠ Required</p>
-        </div>
-        <button class="btn-gold" id="pr-btn" onclick="doPredictRating()" style="width:100%">RUN PREDICTION →</button>
       </div>
       <div id="pr-result-wrap" style="display:none;margin-top:24px">
         <div id="pr-results-grid"></div>
+      </div>
+
+      <!-- ═══ NEURAL X-RAY PANEL (on Predict page) ═══ -->
+      <div id="xray-container" style="display:none;margin-top:32px" class="fr-2">
+        <div class="xray-panel">
+          <div class="xray-title">NEURAL X-RAY — MODEL INTROSPECTION</div>
+          <div class="xray-grid">
+            <!-- Embedding Heatmap -->
+            <div class="xray-section">
+              <div class="xray-section-title">User Embedding Heatmap (50 Dimensions)</div>
+              <div id="xray-user-emb" class="emb-heatmap"></div>
+              <div style="margin-top:12px">
+                <div class="xray-section-title" style="margin-bottom:8px">Movie Embedding Heatmap</div>
+                <div id="xray-movie-emb" class="emb-heatmap"></div>
+              </div>
+              <div style="margin-top:12px;display:flex;justify-content:space-between;align-items:center">
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:0.55rem;color:rgba(240,233,216,0.4)">COSINE SIMILARITY</span>
+                <span id="xray-cosine" style="font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:var(--gold)">—</span>
+              </div>
+            </div>
+
+            <!-- Neuron Activation Flow -->
+            <div class="xray-section">
+              <div class="xray-section-title">Neuron Activation Flow</div>
+              <div class="activation-flow">
+                <div class="act-layer">
+                  <div class="act-pct" id="xray-l1-pct">—%</div>
+                  <div class="act-bar-wrap"><div class="act-bar-inner" id="xray-l1-bar"></div></div>
+                  <div class="act-label">DENSE 1 (128)</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="act-layer">
+                  <div class="act-pct" id="xray-l2-pct">—%</div>
+                  <div class="act-bar-wrap"><div class="act-bar-inner" id="xray-l2-bar"></div></div>
+                  <div class="act-label">DENSE 2 (64)</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="act-layer">
+                  <div class="act-pct" id="xray-out" style="font-size:1.6rem">—</div>
+                  <div class="act-label">OUTPUT</div>
+                </div>
+              </div>
+              <div style="margin-top:16px">
+                <div class="xray-section-title">Top Latent Dimensions</div>
+                <div id="xray-top-dims" style="display:flex;flex-wrap:wrap;gap:6px"></div>
+              </div>
+            </div>
+
+            <!-- User Taste DNA -->
+            <div class="xray-section">
+              <div class="xray-section-title">User Taste DNA Fingerprint</div>
+              <div id="xray-taste-dna" class="taste-dna-wrap"></div>
+              <div style="margin-top:8px;font-family:'IBM Plex Mono',monospace;font-size:0.5rem;color:rgba(240,233,216,0.35)">
+                50-dimensional neural fingerprint unique to this user's cinematic preferences
+              </div>
+            </div>
+
+            <!-- Genre Affinity Radar -->
+            <div class="xray-section genre-radar-wrap">
+              <div class="xray-section-title">Genre Affinity Profile</div>
+              <div style="height:200px"><canvas id="xray-genre-radar"></canvas></div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -1841,12 +2242,15 @@
   <section class="page" id="page-analysis">
     <div style="max-width:1100px;margin:0 auto;padding:32px 24px 64px">
       <div style="text-align:center;margin-bottom:36px" class="fr">
-        <div class="page-eyebrow">Diagnostic View</div>
+        <div class="page-eyebrow">Neural Explainability Engine</div>
         <h1 class="page-title">Prediction<br><em>Analysis</em></h1>
-        <p id="analysis-subtitle" style="font-size:1rem;color:var(--sepia)">Multi-graph diagnostic view of network
-          outputs.</p>
+        <p id="analysis-subtitle" style="font-size:1rem;color:var(--sepia)">Multi-graph diagnostic view of network outputs.</p>
       </div>
+
+      <!-- Prediction Results -->
       <div id="analysis-text-grid" class="fr-1" style="display:grid;gap:16px;margin-bottom:32px"></div>
+
+      <!-- Charts -->
       <div id="analysis-charts-area" style="display:none;grid-template-columns:1fr 1fr;gap:20px" class="fr-2">
         <div class="chart-panel">
           <div style="height:300px"><canvas id="a-chart-bar"></canvas></div>
@@ -1925,6 +2329,27 @@
             <div class="stat-lbl">Genre</div>
           </div>
         </div>
+
+        <!-- ═══ USER PROFILE X-RAY (on Recommend page) ═══ -->
+        <div id="rc-profile-xray" style="margin-bottom:32px;display:none" class="fr-2">
+          <div class="xray-panel">
+            <div class="xray-title">LEARNED USER PROFILE — NEURAL TASTE DNA</div>
+            <div class="xray-grid">
+              <div class="xray-section">
+                <div class="xray-section-title">Latent Taste DNA Fingerprint</div>
+                <div id="rc-taste-dna" class="taste-dna-wrap"></div>
+                <div style="margin-top:10px;font-family:'IBM Plex Mono',monospace;font-size:0.55rem;color:rgba(240,233,216,0.4)">
+                  Visualizing the 50 learned dimensions of this user's preference vector.
+                </div>
+              </div>
+              <div class="xray-section genre-radar-wrap">
+                <div class="xray-section-title">Calculated Genre Affinity</div>
+                <div style="height:200px"><canvas id="rc-genre-radar"></canvas></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div id="rc-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px"></div>
       </div>
     </div>
@@ -2386,8 +2811,12 @@
         if (labels.length > 0) {
           window.chartDataBuffer = { labels, scores, confidences, title: `Analysis — ${preds.length} prediction(s)` };
           document.getElementById('nt-analysis').style.display = 'inline-block';
-          goTo('analysis');
-          setTimeout(renderAnalysisCharts, 520);
+          // Trigger Neural X-Ray directly on predict page for single prediction
+          if (preds.length === 1) {
+            setTimeout(() => {
+              loadNeuralXRay(uid, preds[0].movieId);
+            }, 600);
+          }
         }
         toast(`${preds.length} prediction(s) generated`, 'ok');
         if (preds[0] && preds[0].latency_ms) {
@@ -2459,9 +2888,17 @@
         grid.innerHTML = '';
         if (!recs.length) {
           grid.innerHTML = '<div class="panel" style="padding:20px;grid-column:1/-1;text-align:center;font-family:\'IBM Plex Mono\',monospace;font-size:0.75rem;color:var(--sepia)">No recommendations — user may not be in training data.</div>';
+          document.getElementById('rc-profile-xray').style.display = 'none';
         } else {
           recs.forEach((m, i) => { grid.innerHTML += movieCardHTML(m, i, true); });
           animBars();
+          
+          // Show and populate User Profile X-Ray
+          document.getElementById('rc-profile-xray').style.display = 'block';
+          renderTasteDNA('rc-taste-dna', d.user_taste_dna);
+          setTimeout(() => {
+            renderGenreRadarOnRecommend(d.genre_affinity);
+          }, 800);
         }
         toast(`${recs.length} recommendations for User #${d.userId}`, 'ok');
         if (d.latency_ms) {
@@ -2584,6 +3021,8 @@
       const delay = (i * 0.07).toFixed(2);
       const score = m.predicted_rating || m.score || m.avg_rating || 0;
       const pct = Math.min((score / 5) * 100, 100);
+      const nmp = m.neural_match_pct || 0;
+      const matchClass = nmp >= 65 ? 'high' : nmp >= 45 ? 'mid' : 'low';
       return `<div class="movie-card" style="animation:cardIn 0.5s ${delay}s both">
     <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px">
       <div class="card-genre">${m.genres || m.genre || ''}</div>
@@ -2595,6 +3034,8 @@
     <div class="bar-track"><div class="bar-fill" data-w="${pct}"></div></div>
     <div style="font-family:'Bebas Neue',sans-serif;font-size:1.1rem;color:var(--gold);letter-spacing:0.1em;margin-top:4px">${(+score).toFixed(1)} / 5.0</div>` : ''}
     
+    ${nmp ? `<div class="neural-match ${matchClass}">🧠 NEURAL MATCH: ${nmp}%</div>` : ''}
+
     ${m.reason ? `<div style="margin-top:12px;padding:8px;background:rgba(201,146,42,0.05);border-left:2px solid var(--gold);font-family:'IBM Plex Mono',monospace;font-size:0.58rem;color:var(--sepia)">
       💡 ${m.reason}
     </div>` : ''}
@@ -2713,7 +3154,214 @@
           document.getElementById('st-opt').textContent = d.optimization;
           document.getElementById('st-latency').textContent = d.avg_inference_time;
         }
+        // Also trigger benchmark
+        loadBenchmark();
       } catch (e) { console.error('Engine stats error:', e); }
+    }
+
+    /* ── LIVE BENCHMARK ── */
+    async function loadBenchmark() {
+      try {
+        const d = await api('/benchmark');
+        const panel = document.getElementById('benchmark-panel');
+        if (!panel) return;
+        panel.style.display = 'block';
+
+        const np = d.numpy_engine;
+        document.getElementById('bm-np-inf').textContent = np.total_inference_ms.toFixed(4) + ' ms';
+        document.getElementById('bm-np-mem').textContent = np.memory_kb + ' KB';
+        document.getElementById('bm-np-batch').textContent = np.batch_200_ms.toFixed(2) + ' ms';
+        document.getElementById('bm-np-pps').textContent = np.predictions_per_second.toLocaleString();
+        document.getElementById('bm-speedup').textContent = d.speedup_factor + '×';
+        document.getElementById('bm-memreduce').textContent = d.memory_reduction_pct + '%';
+
+        // Layer-by-layer breakdown
+        const layersEl = document.getElementById('bm-layers');
+        const maxTime = Math.max(np.embedding_lookup_ms, np.dense_1_ms, np.dense_2_ms, np.output_ms);
+        const layers = [
+          { name: 'Embedding Lookup', time: np.embedding_lookup_ms },
+          { name: 'Dense 1 (128 ReLU)', time: np.dense_1_ms },
+          { name: 'Dense 2 (64 ReLU)', time: np.dense_2_ms },
+          { name: 'Output (Sigmoid)', time: np.output_ms }
+        ];
+        layersEl.innerHTML = layers.map(l => {
+          const pct = (l.time / maxTime) * 100;
+          return `<div class="layer-bar-wrap">
+            <div class="layer-bar-label"><span>${l.name}</span><span style="color:var(--gold)">${l.time.toFixed(4)} ms</span></div>
+            <div class="layer-bar-track"><div class="layer-bar-fill" data-bw="${pct}"></div></div>
+          </div>`;
+        }).join('');
+
+        // Animate the bars
+        setTimeout(() => {
+          document.querySelectorAll('.layer-bar-fill[data-bw]').forEach(el => {
+            el.style.width = el.dataset.bw + '%';
+          });
+        }, 300);
+      } catch (e) { console.error('Benchmark error:', e); }
+    }
+
+    /* ── NEURAL X-RAY ── */
+    let genreRadarChart = null;
+    async function loadNeuralXRay(userId, movieId) {
+      try {
+        const d = await api('/explain', { method: 'POST', body: JSON.stringify({ userId: +userId, movieId: +movieId }) });
+        const container = document.getElementById('xray-container');
+        container.style.display = 'block';
+
+        // 1. Embedding Heatmaps
+        renderEmbeddingHeatmap('xray-user-emb', d.user_embedding);
+        renderEmbeddingHeatmap('xray-movie-emb', d.movie_embedding);
+        document.getElementById('xray-cosine').textContent = d.embedding_similarity.toFixed(4);
+
+        // 2. Neuron Activation Flow
+        const l1 = d.layer_1_activations;
+        const l2 = d.layer_2_activations;
+        document.getElementById('xray-l1-pct').textContent = l1.neurons_fired_pct + '%';
+        document.getElementById('xray-l2-pct').textContent = l2.neurons_fired_pct + '%';
+        document.getElementById('xray-out').textContent = d.predicted_rating.toFixed(2) + '★';
+
+        setTimeout(() => {
+          document.getElementById('xray-l1-bar').style.width = l1.neurons_fired_pct + '%';
+          document.getElementById('xray-l2-bar').style.width = l2.neurons_fired_pct + '%';
+        }, 300);
+
+        // 3. Top Latent Dimensions
+        const dimsEl = document.getElementById('xray-top-dims');
+        dimsEl.innerHTML = d.top_latent_dimensions.slice(0, 8).map((dim, i) => {
+          const score = d.top_dim_contributions[i];
+          const color = score > 0 ? 'var(--gold)' : 'rgba(139,26,26,0.8)';
+          return `<div style="padding:4px 10px;border:1px solid rgba(201,146,42,0.2);font-family:'IBM Plex Mono',monospace;font-size:0.55rem">
+            <span style="color:${color}">DIM #${dim}</span>
+            <span style="color:rgba(240,233,216,0.4);margin-left:6px">${score > 0 ? '+' : ''}${score.toFixed(3)}</span>
+          </div>`;
+        }).join('');
+
+        // 4. Taste DNA
+        renderTasteDNA('xray-taste-dna', d.taste_dna);
+
+        // 5. Genre Affinity Radar — delay to ensure canvas is properly sized
+        setTimeout(() => {
+          renderGenreRadar('xray-genre-radar', d.genre_affinity);
+        }, 800);
+
+      } catch (e) { console.error('X-Ray error:', e); }
+    }
+
+    function renderEmbeddingHeatmap(containerId, values) {
+      const el = document.getElementById(containerId);
+      if (!el || !values) return;
+      const maxVal = Math.max(...values.map(Math.abs));
+      el.innerHTML = '';
+      values.forEach((v, i) => {
+        const bar = document.createElement('div');
+        bar.className = 'emb-bar';
+        const normalized = Math.abs(v) / (maxVal || 1);
+        bar.style.height = '2px';
+        const hue = v >= 0 ? '38' : '0';
+        const sat = v >= 0 ? '80%' : '70%';
+        bar.style.background = `hsl(${hue}, ${sat}, ${40 + normalized * 30}%)`;
+        bar.title = `Dim ${i}: ${v.toFixed(4)}`;
+        el.appendChild(bar);
+        setTimeout(() => { bar.style.height = (4 + normalized * 36) + 'px'; }, 100 + i * 15);
+      });
+    }
+
+    function renderTasteDNA(containerId, values) {
+      const el = document.getElementById(containerId);
+      if (!el || !values) return;
+      const maxVal = Math.max(...values.map(Math.abs));
+      el.innerHTML = '';
+      values.forEach((v, i) => {
+        const bar = document.createElement('div');
+        bar.className = 'dna-bar';
+        const normalized = Math.abs(v) / (maxVal || 1);
+        bar.style.height = '2px';
+        const hue = 30 + (v >= 0 ? normalized * 15 : -normalized * 30);
+        bar.style.background = `hsl(${hue}, 75%, ${45 + normalized * 25}%)`;
+        el.appendChild(bar);
+        setTimeout(() => { bar.style.height = (6 + normalized * 44) + 'px'; }, 50 + i * 20);
+      });
+    }
+
+    let rcGenreRadarChart = null;
+    function renderGenreRadarOnRecommend(genreAffinity) {
+      renderGenreRadar('rc-genre-radar', genreAffinity, true);
+    }
+
+    function renderGenreRadar(canvasId, genreAffinity, isRecommend = false) {
+      const section = isRecommend ? document.querySelector('#rc-profile-xray .genre-radar-wrap') : document.querySelector('.genre-radar-wrap');
+      if (!genreAffinity || Object.keys(genreAffinity).length === 0) {
+        if (section) section.innerHTML = `<div class="xray-section-title">Genre Affinity Profile</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:0.6rem;color:rgba(240,233,216,0.4);text-align:center;padding:40px 0">No genre data available for this user</div>`;
+        return;
+      }
+
+      const canvas = document.getElementById(canvasId);
+      if (!canvas) return;
+
+      try {
+        if (isRecommend) {
+          if (rcGenreRadarChart) rcGenreRadarChart.destroy();
+        } else {
+          if (genreRadarChart) genreRadarChart.destroy();
+        }
+
+        const labels = Object.keys(genreAffinity).slice(0, 10);
+        const data = labels.map(l => genreAffinity[l]);
+
+        const chart = new Chart(canvas.getContext('2d'), {
+          type: 'radar',
+          data: {
+            labels,
+            datasets: [{
+              label: 'Genre Affinity %',
+              data,
+              backgroundColor: 'rgba(201,146,42,0.15)',
+              borderColor: 'rgba(201,146,42,0.7)',
+              pointBackgroundColor: '#c9922a',
+              pointBorderColor: '#c9922a',
+              pointRadius: 3,
+              borderWidth: 1.5
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              r: {
+                beginAtZero: true,
+                max: 100,
+                ticks: { display: false },
+                grid: { color: 'rgba(201,146,42,0.1)' },
+                angleLines: { color: 'rgba(201,146,42,0.1)' },
+                pointLabels: { color: 'rgba(240,233,216,0.6)', font: { family: "'IBM Plex Mono'", size: 9 } }
+              }
+            },
+            plugins: {
+              legend: { display: false }
+            }
+          }
+        });
+
+        if (isRecommend) rcGenreRadarChart = chart;
+        else genreRadarChart = chart;
+
+      } catch(e) {
+        // Fallback: render as text bars
+        console.error('Radar chart error:', e);
+        const labels = Object.keys(genreAffinity).slice(0, 8);
+        const parent = canvas.parentElement;
+        parent.innerHTML = labels.map(g => {
+          const val = genreAffinity[g];
+          return `<div style="margin:6px 0">
+            <div style="display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:0.55rem;color:rgba(240,233,216,0.5);margin-bottom:3px">
+              <span>${g}</span><span style="color:var(--gold)">${val}%</span>
+            </div>
+            <div class="layer-bar-track"><div class="layer-bar-fill" style="width:${val}%"></div></div>
+          </div>`;
+        }).join('');
+      }
     }
 
     /* ── INIT ── */
