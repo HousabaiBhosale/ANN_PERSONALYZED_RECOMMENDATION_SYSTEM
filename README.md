@@ -6,13 +6,13 @@
 ![NumPy](https://img.shields.io/badge/Engine-Pure_NumPy-blue?style=for-the-badge)
 ![XAI](https://img.shields.io/badge/XAI-Neural_X--Ray-red?style=for-the-badge)
 
-**CineANN** is a high-performance, competition-grade recommendation engine. It goes beyond simple "black box" AI by providing real-time **Neural Explainability (XAI)** and showing exactly how it thinks through its custom-built **NumPy Neural Inference Engine**.
+**CineANN** is a high-performance recommendation engine that goes beyond "black box" AI. It provides real-time **Neural Explainability (XAI)**, revealing the internal logic of its custom-built **NumPy Neural Inference Engine**.
 
 ---
 
-## 🏆 Competition Winning Features (v2.0)
+## 💎 Advanced Neural Innovations (v2.0)
 
-CineANN was upgraded for the 2026 AI Excellence Competition with high-impact "Neural Introspection" tools:
+CineANN features high-impact "Neural Introspection" tools for deep model transparency:
 
 ### 🔬 1. Neural X-Ray (Model Introspection)
 Deeply analyze the ANN's decision-making process for any specific movie prediction:
@@ -102,6 +102,6 @@ Standard projects require the entire 1.2GB TensorFlow library to run. CineANN us
 ---
 
 ## 📜 License
-This project is licensed under the MIT License. Developed for the 2026 AI Excellence Competition.
+This project is licensed under the MIT License.
 
 *Coded with ❤️ using Artificial Neural Networks and Pure NumPy.*
