@@ -2360,9 +2360,7 @@
         </div>
 
         <div id="rc-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px"></div>
-        <div id="rc-analysis-btn-wrap" style="text-align:center;margin-top:24px;display:none">
-          <button class="btn-gold" onclick="viewAnalysisPage()" style="padding:12px 32px;font-size:0.75rem;letter-spacing:0.2em">VIEW FULL ANALYSIS →</button>
-        </div>
+
       </div>
     </div>
   </section>
@@ -2918,7 +2916,6 @@
       const genre = document.getElementById('rc-genre').value.trim();
       if (!uid || +uid < 1) { showErr('rc-uid', 'rc-uid-err'); return; }
       hideErr('rc-uid', 'rc-uid-err');
-      document.getElementById('rc-analysis-btn-wrap').style.display = 'none';
       setLoading('rc-btn', true);
       try {
         const body = { userId: +uid, n: +n };
@@ -2948,12 +2945,6 @@
             renderGenreRadarOnRecommend(d.genre_affinity);
           }, 800);
 
-          // Prepare charts data for Analysis page
-          const labels = recs.slice(0, 10).map(m => (m.title || '').substring(0, 20));
-          const scores = recs.slice(0, 10).map(m => m.predicted_rating);
-          const confidences = recs.slice(0, 10).map(m => m.confidence_score || 85);
-          window.chartDataBuffer = { labels, scores, confidences, title: `Analysis — Top ${recs.length} Recommendations` };
-          document.getElementById('rc-analysis-btn-wrap').style.display = 'block';
         }
         toast(`${recs.length} recommendations for User #${d.userId}`, 'ok');
         if (d.latency_ms) {
