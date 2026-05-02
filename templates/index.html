@@ -601,13 +601,18 @@
       font-size: 1.8rem;
       cursor: pointer;
       color: var(--warm);
-      transition: color 0.2s, transform 0.2s;
-      user-select: none
+      transition: transform 0.2s;
+      user-select: none;
+      position: relative;
+      display: inline-block;
+      /* Use gradient for fractional fill */
+      background: linear-gradient(90deg, var(--gold) var(--fill, 0%), var(--warm) var(--fill, 0%));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
     .star:hover,
     .star.lit {
-      color: var(--gold);
       transform: scale(1.15)
     }
 
@@ -2502,9 +2507,18 @@
       s.addEventListener('mouseout', () => litStars(rtRating));
       s.addEventListener('click', () => { rtRating = +s.dataset.v; litStars(rtRating); document.getElementById('rt-rating').value = rtRating; });
     });
-    function litStars(n) { document.querySelectorAll('#rt-stars .star').forEach(s => s.classList.toggle('lit', +s.dataset.v <= n)); }
+    function litStars(n) {
+      document.querySelectorAll('#rt-stars .star').forEach(s => {
+        const val = +s.dataset.v;
+        let fill = 0;
+        if (n >= val) fill = 100;
+        else if (n > val - 1) fill = (n - (val - 1)) * 100;
+        s.style.setProperty('--fill', fill + '%');
+        s.classList.toggle('lit', fill > 0);
+      });
+    }
     document.getElementById('rt-rating').addEventListener('input', function () {
-      const v = parseFloat(this.value); if (v >= 1 && v <= 5) { rtRating = Math.round(v); litStars(rtRating); }
+      const v = parseFloat(this.value); if (v >= 0.5 && v <= 5) { rtRating = v; litStars(rtRating); }
     });
     async function doRate() {
       const uid = document.getElementById('rt-uid').value.trim();
