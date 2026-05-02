@@ -2170,6 +2170,9 @@
       </div>
       <div id="pr-result-wrap" style="display:none;margin-top:24px">
         <div id="pr-results-grid"></div>
+        <div id="pr-analysis-btn-wrap" style="text-align:center;margin-top:20px;display:none">
+          <button class="btn-gold" onclick="viewAnalysisPage()" style="padding:12px 32px;font-size:0.75rem;letter-spacing:0.2em">VIEW FULL ANALYSIS →</button>
+        </div>
       </div>
 
       <!-- ═══ NEURAL X-RAY PANEL (on Predict page) ═══ -->
@@ -2696,6 +2699,7 @@
         setTimeout(() => { if (el) el.classList.add('visible'); }, 20);
         const tb = document.getElementById('nt-' + pg);
         if (tb) tb.classList.add('active');
+        if (pg === 'analysis') setTimeout(renderAnalysisCharts, 500);
         window.scrollTo(0, 0);
       });
     }
@@ -2772,6 +2776,7 @@
       if (!uid || +uid < 1) { showErr('pr-uid', 'pr-uid-err'); ok = false; } else hideErr('pr-uid', 'pr-uid-err');
       if (!mid) { showErr('pr-mid', 'pr-mid-err'); ok = false; } else hideErr('pr-mid', 'pr-mid-err');
       if (!ok) return;
+      document.getElementById('pr-analysis-btn-wrap').style.display = 'none';
       setLoading('pr-btn', true);
       try {
         const body = { userId: +uid };
@@ -2817,6 +2822,8 @@
               loadNeuralXRay(uid, preds[0].movieId);
             }, 600);
           }
+          // Show the Analysis button
+          document.getElementById('pr-analysis-btn-wrap').style.display = 'block';
         }
         toast(`${preds.length} prediction(s) generated`, 'ok');
         if (preds[0] && preds[0].latency_ms) {
@@ -2828,6 +2835,11 @@
       finally { setLoading('pr-btn', false, 'RUN PREDICTION →'); }
     }
 
+    function viewAnalysisPage() {
+      goTo('analysis');
+      setTimeout(renderAnalysisCharts, 500);
+    }
+    
     function renderAnalysisCharts() {
       if (!window.chartDataBuffer) return;
       const { labels, scores, confidences, title } = window.chartDataBuffer;
