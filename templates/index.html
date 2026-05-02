@@ -2254,18 +2254,24 @@
       <div id="analysis-text-grid" class="fr-1" style="display:grid;gap:16px;margin-bottom:32px"></div>
 
       <!-- Charts -->
-      <div id="analysis-charts-area" style="display:none;grid-template-columns:1fr 1fr;gap:20px" class="fr-2">
+      <div id="analysis-charts-area" style="display:none;grid-template-columns:repeat(auto-fit, minmax(340px, 1fr));gap:20px" class="fr-2">
         <div class="chart-panel">
-          <div style="height:300px"><canvas id="a-chart-bar"></canvas></div>
+          <div style="height:280px"><canvas id="a-chart-bar"></canvas></div>
         </div>
         <div class="chart-panel">
-          <div style="height:300px"><canvas id="a-chart-line"></canvas></div>
+          <div style="height:280px"><canvas id="a-chart-line"></canvas></div>
         </div>
         <div class="chart-panel">
-          <div style="height:300px"><canvas id="a-chart-radar"></canvas></div>
+          <div style="height:280px"><canvas id="a-chart-scatter"></canvas></div>
         </div>
         <div class="chart-panel">
-          <div style="height:300px"><canvas id="a-chart-polar"></canvas></div>
+          <div style="height:280px"><canvas id="a-chart-dist"></canvas></div>
+        </div>
+        <div class="chart-panel">
+          <div style="height:280px"><canvas id="a-chart-radar"></canvas></div>
+        </div>
+        <div class="chart-panel">
+          <div style="height:280px"><canvas id="a-chart-polar"></canvas></div>
         </div>
       </div>
       <div style="text-align:center;margin-top:32px" class="fr-3">
@@ -2354,6 +2360,9 @@
         </div>
 
         <div id="rc-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px"></div>
+        <div id="rc-analysis-btn-wrap" style="text-align:center;margin-top:24px;display:none">
+          <button class="btn-gold" onclick="viewAnalysisPage()" style="padding:12px 32px;font-size:0.75rem;letter-spacing:0.2em">VIEW FULL ANALYSIS →</button>
+        </div>
       </div>
     </div>
   </section>
@@ -2768,7 +2777,7 @@
     }
 
     /* ── PREDICT ── */
-    let aC1 = null, aC2 = null, aC3 = null, aC4 = null;
+    let aC1 = null, aC2 = null, aC3 = null, aC4 = null, aC5 = null, aC6 = null;
     async function doPredictRating() {
       const uid = document.getElementById('pr-uid').value.trim() || currentUser;
       const mid = document.getElementById('pr-mid').value.trim();
@@ -2848,30 +2857,56 @@
       area.style.display = 'grid';
       document.getElementById('analysis-text-grid').innerHTML = document.getElementById('pr-results-grid').innerHTML;
       if (aC1) aC1.destroy(); if (aC2) aC2.destroy(); if (aC3) aC3.destroy(); if (aC4) aC4.destroy();
+      if (aC5) aC5.destroy(); if (aC6) aC6.destroy();
+
       const cols = ['rgba(201,146,42,0.55)', 'rgba(139,26,26,0.5)', 'rgba(107,90,62,0.5)', 'rgba(26,18,8,0.4)', 'rgba(201,146,42,0.3)'];
       const bords = ['#c9922a', '#8b1a1a', '#6b5a3e', '#1a1208', '#c9922a'];
       const chartDefaults = { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#6b5a3e', font: { family: '\'IBM Plex Mono\'', size: 11 } } } } };
+      
+      // 1. HORIZONTAL BAR (Ranking)
       aC1 = new Chart(document.getElementById('a-chart-bar').getContext('2d'), {
         type: 'bar',
         data: { labels, datasets: [{ label: 'Predicted Rating', data: scores, backgroundColor: cols, borderColor: bords, borderWidth: 1 }] },
-        options: { ...chartDefaults, indexAxis: 'y', scales: { x: { max: 5.5, ticks: { color: '#6b5a3e' }, grid: { color: 'rgba(107,90,62,0.1)' } }, y: { ticks: { color: '#6b5a3e' }, grid: { color: 'rgba(107,90,62,0.08)' } } }, plugins: { ...chartDefaults.plugins, title: { display: true, text: 'Rating Benchmark', color: '#2d2416', font: { family: "'Playfair Display'", size: 14 } } } }
+        options: { ...chartDefaults, indexAxis: 'y', scales: { x: { max: 5.5, ticks: { color: '#6b5a3e' } }, y: { ticks: { color: '#6b5a3e' } } }, plugins: { ...chartDefaults.plugins, title: { display: true, text: 'Neural Ranking Benchmark', color: '#2d2416' } } }
       });
-      const bData = scores.map((s, i) => ({ x: s, y: confidences[i], r: 8 + (confidences[i] / 20) }));
+
+      // 2. LINE CHART (Sequential Trend)
       aC2 = new Chart(document.getElementById('a-chart-line').getContext('2d'), {
+        type: 'line',
+        data: { labels, datasets: [{ label: 'Rating Pattern', data: scores, borderColor: '#c9922a', backgroundColor: 'rgba(201,146,42,0.1)', fill: true, tension: 0.4 }] },
+        options: { ...chartDefaults, scales: { y: { min: 0, max: 5.5 } }, plugins: { ...chartDefaults.plugins, title: { display: true, text: 'Sequential Rating Flow', color: '#2d2416' } } }
+      });
+
+      // 3. SCATTER / BUBBLE (Correlation)
+      const bData = scores.map((s, i) => ({ x: s, y: confidences[i], r: 7 }));
+      aC3 = new Chart(document.getElementById('a-chart-scatter').getContext('2d'), {
         type: 'bubble',
-        data: { datasets: [{ label: 'Correlation', data: bData, backgroundColor: 'rgba(201,146,42,0.4)', borderColor: '#c9922a', borderWidth: 1.5 }] },
-        options: { ...chartDefaults, scales: { x: { title: { display: true, text: 'Predicted Rating', color: '#6b5a3e' }, max: 5.5, min: 0, ticks: { color: '#6b5a3e' }, grid: { color: 'rgba(107,90,62,0.1)' } }, y: { title: { display: true, text: 'Confidence %', color: '#6b5a3e' }, max: 105, min: 0, ticks: { color: '#6b5a3e' }, grid: { color: 'rgba(107,90,62,0.1)' } } }, plugins: { ...chartDefaults.plugins, title: { display: true, text: 'Rating vs Confidence', color: '#2d2416', font: { family: "'Playfair Display'", size: 14 } } } }
+        data: { datasets: [{ label: 'Match Confidence', data: bData, backgroundColor: 'rgba(139,26,26,0.6)', borderColor: '#8b1a1a' }] },
+        options: { ...chartDefaults, scales: { x: { title: { display: true, text: 'Rating' }, max: 5.5 }, y: { title: { display: true, text: 'Conf %' }, max: 105 } }, plugins: { ...chartDefaults.plugins, title: { display: true, text: 'Rating vs Confidence', color: '#2d2416' } } }
       });
-      aC3 = new Chart(document.getElementById('a-chart-radar').getContext('2d'), {
+
+      // 4. DISTRIBUTION (Frequency)
+      const dist = [0, 0, 0, 0, 0];
+      scores.forEach(s => { const idx = Math.floor(s - 0.01); if (idx >= 0 && idx < 5) dist[idx]++; });
+      aC4 = new Chart(document.getElementById('a-chart-dist').getContext('2d'), {
+        type: 'bar',
+        data: { labels: ['1★', '2★', '3★', '4★', '5★'], datasets: [{ label: 'Frequency', data: dist, backgroundColor: '#c9922a' }] },
+        options: { ...chartDefaults, plugins: { ...chartDefaults.plugins, title: { display: true, text: 'Rating Distribution', color: '#2d2416' } } }
+      });
+
+      // 5. RADAR / POLAR
+      aC5 = new Chart(document.getElementById('a-chart-radar').getContext('2d'), {
         type: 'polarArea',
-        data: { labels, datasets: [{ data: scores, backgroundColor: cols, borderColor: '#faf6ef', borderWidth: 1 }] },
-        options: { ...chartDefaults, scales: { r: { ticks: { display: false }, grid: { color: 'rgba(107,90,62,0.15)' } } }, plugins: { ...chartDefaults.plugins, title: { display: true, text: 'Polar Distribution', color: '#2d2416', font: { family: "'Playfair Display'", size: 14 } } } }
+        data: { labels, datasets: [{ data: scores, backgroundColor: cols }] },
+        options: { ...chartDefaults, scales: { r: { ticks: { display: false } } }, plugins: { ...chartDefaults.plugins, title: { display: true, text: 'Polar Magnitude', color: '#2d2416' } } }
       });
+
+      // 6. GAUGE (Avg Confidence)
       const avgConf = confidences.reduce((a, b) => a + b, 0) / (confidences.length || 1);
-      aC4 = new Chart(document.getElementById('a-chart-polar').getContext('2d'), {
+      aC6 = new Chart(document.getElementById('a-chart-polar').getContext('2d'), {
         type: 'doughnut',
-        data: { labels: ['Confidence', 'Uncertainty'], datasets: [{ data: [avgConf, Math.max(0, 100 - avgConf)], backgroundColor: ['#c9922a', 'rgba(224,213,192,0.4)'], borderWidth: 0 }] },
-        options: { ...chartDefaults, rotation: -90, circumference: 180, plugins: { ...chartDefaults.plugins, title: { display: true, text: 'Confidence Gauge', color: '#2d2416', font: { family: "'Playfair Display'", size: 14 } } } }
+        data: { labels: ['Confidence', 'Uncertainty'], datasets: [{ data: [avgConf, 100 - avgConf], backgroundColor: ['#c9922a', 'rgba(107,90,62,0.1)'] }] },
+        options: { ...chartDefaults, rotation: -90, circumference: 180, plugins: { ...chartDefaults.plugins, title: { display: true, text: 'System Confidence', color: '#2d2416' } } }
       });
     }
 
@@ -2883,6 +2918,7 @@
       const genre = document.getElementById('rc-genre').value.trim();
       if (!uid || +uid < 1) { showErr('rc-uid', 'rc-uid-err'); return; }
       hideErr('rc-uid', 'rc-uid-err');
+      document.getElementById('rc-analysis-btn-wrap').style.display = 'none';
       setLoading('rc-btn', true);
       try {
         const body = { userId: +uid, n: +n };
@@ -2911,6 +2947,13 @@
           setTimeout(() => {
             renderGenreRadarOnRecommend(d.genre_affinity);
           }, 800);
+
+          // Prepare charts data for Analysis page
+          const labels = recs.slice(0, 10).map(m => (m.title || '').substring(0, 20));
+          const scores = recs.slice(0, 10).map(m => m.predicted_rating);
+          const confidences = recs.slice(0, 10).map(m => m.confidence_score || 85);
+          window.chartDataBuffer = { labels, scores, confidences, title: `Analysis — Top ${recs.length} Recommendations` };
+          document.getElementById('rc-analysis-btn-wrap').style.display = 'block';
         }
         toast(`${recs.length} recommendations for User #${d.userId}`, 'ok');
         if (d.latency_ms) {
