@@ -19,47 +19,28 @@
 - **⭐ Interactive Rating System**: Submit new ratings directly through the UI to update user profiles.
 - **🔥 Popularity Tracking**: Automatic calculation of trending films based on global user activity.
 - **📱 Premium UI/UX**: A "Lumina Noir" aesthetic featuring smooth animations, canvas-based backgrounds, and a responsive design.
-22: 
-23: ---
-24: 
-25: ## 🖼️ Visual Showcase
-26: 
-27: | Login Interface | Interactive Dashboard |
-28: | :---: | :---: |
-29: | ![Login Placeholder](https://via.placeholder.com/400x250?text=Lumina+Noir+Login) | ![Dashboard Placeholder](https://via.placeholder.com/400x250?text=Neural+Analytics+Dashboard) |
-30: 
-31: | Recommendation Engine | Search & Discovery |
-32: | :---: | :---: |
-33: | ![Recs Placeholder](https://via.placeholder.com/400x250?text=Personalized+Recommendations) | ![Search Placeholder](https://via.placeholder.com/400x250?text=Real-time+Movie+Search) |
-34: 
-35: ---
-36: 
-37: ## 💎 Unique Selling Points (USPs)
-38: 
-39: What makes **CineANN** different from standard recommendation tutorials:
-40: 
-41: 1.  **Zero-Overhead Inference**: Most projects require the entire TensorFlow library to run. CineANN uses a custom NumPy engine that performs the same math at a fraction of the cost and memory.
-42: 2.  **Custom Design System**: Instead of using generic frameworks like Bootstrap, CineANN features a handcrafted "Lumina Noir" CSS system designed specifically for a premium cinematic experience.
-43: 3.  **Real-time MAE Monitoring**: The system doesn't just predict; it audits itself. The dashboard tracks prediction error (MAE) in real-time as new data is added.
 
 ---
 
-## 🛠️ Tech Stack
+## 🖼️ Visual Showcase
 
-### Backend
-- **Language**: Python 3.x
-- **Framework**: Flask
-- **WSGI Server**: Gunicorn (Production ready)
-- **Data Processing**: Pandas, NumPy
-- **Machine Learning**: TensorFlow 2.x, Keras, Scikit-Learn
-- **Serialization**: Pickle (for User/Movie Encoders)
+| Login Interface | Interactive Dashboard |
+| :---: | :---: |
+| ![Login Placeholder](https://via.placeholder.com/400x250?text=Lumina+Noir+Login) | ![Dashboard Placeholder](https://via.placeholder.com/400x250?text=Neural+Analytics+Dashboard) |
 
-### Frontend
-- **Structure**: Semantic HTML5
-- **Styling**: Vanilla CSS3 (Custom design system with vintage "Sepia" palette)
-- **Interactivity**: JavaScript (Async Fetch API)
-- **Visualizations**: Chart.js
-- **Typography**: Google Fonts (Playfair Display, Bebas Neue, IBM Plex Mono)
+| Recommendation Engine | Search & Discovery |
+| :---: | :---: |
+| ![Recs Placeholder](https://via.placeholder.com/400x250?text=Personalized+Recommendations) | ![Search Placeholder](https://via.placeholder.com/400x250?text=Real-time+Movie+Search) |
+
+---
+
+## 💎 Unique Selling Points (USPs)
+
+What makes **CineANN** different from standard recommendation tutorials:
+
+1.  **Zero-Overhead Inference**: Most projects require the entire TensorFlow library to run. CineANN uses a custom NumPy engine that performs the same math at a fraction of the cost and memory.
+2.  **Custom Design System**: Instead of using generic frameworks like Bootstrap, CineANN features a handcrafted "Lumina Noir" CSS system designed specifically for a premium cinematic experience.
+3.  **Real-time MAE Monitoring**: The system doesn't just predict; it audits itself. The dashboard tracks prediction error (MAE) in real-time as new data is added.
 
 ---
 
@@ -89,6 +70,25 @@ In a typical production environment, loading the heavy TensorFlow framework for 
 - **CineANN** uses a custom-built **Pure NumPy Inference Engine**. 
 - We extracted the trained weights from the Keras model and replicated the neural logic using matrix multiplication (`@` operator). 
 - This results in **sub-millisecond prediction times** and near-zero memory footprint.
+
+---
+
+## 🛠️ Tech Stack
+
+### Backend
+- **Language**: Python 3.x
+- **Framework**: Flask
+- **WSGI Server**: Gunicorn (Production ready)
+- **Data Processing**: Pandas, NumPy
+- **Machine Learning**: TensorFlow 2.x, Keras, Scikit-Learn
+- **Serialization**: Pickle (for User/Movie Encoders)
+
+### Frontend
+- **Structure**: Semantic HTML5
+- **Styling**: Vanilla CSS3 (Custom design system with vintage "Sepia" palette)
+- **Interactivity**: JavaScript (Async Fetch API)
+- **Visualizations**: Chart.js
+- **Typography**: Google Fonts (Playfair Display, Bebas Neue, IBM Plex Mono)
 
 ---
 
@@ -149,23 +149,23 @@ In a typical production environment, loading the heavy TensorFlow framework for 
 | `/movies/search` | `GET` | Search movies by title |
 | `/upload` | `POST` | Upload new ratings CSV |
 | `/health` | `GET` | Check system and model status |
-111: 
-112: ---
-113: 
-114: ## 🗺️ Future Roadmap
-115: 
-116: - [ ] **Hybrid Filtering**: Combine the current ANN approach with Content-Based filtering (using movie tags/synopsis).
-117: - [ ] **PostgreSQL Integration**: Migrate from CSV-based storage to a robust relational database for better scalability.
-118: - [ ] **TMDB API Integration**: Fetch real-time movie posters and trailers to enhance the visual experience.
-119: - [ ] **User Auth System**: Implement Secure JWT-based authentication for multiple user accounts.
-120: - [ ] **Global Leaderboards**: Display trending movies based on real-time user ratings across the platform.
-121: 
-122: ---
-123: 
-124: ## 📚 Acknowledgements
-125: 
-126: - **Dataset**: [MovieLens 100k](https://grouplens.org/datasets/movielens/100k/) provided by GroupLens Research.
-127: - **Inspiration**: The golden age of cinema and modern neural architecture designs.
+
+---
+
+## 🗺️ Future Roadmap
+
+- [ ] **Hybrid Filtering**: Combine the current ANN approach with Content-Based filtering (using movie tags/synopsis).
+- [ ] **PostgreSQL Integration**: Migrate from CSV-based storage to a robust relational database for better scalability.
+- [ ] **TMDB API Integration**: Fetch real-time movie posters and trailers to enhance the visual experience.
+- [ ] **User Auth System**: Implement Secure JWT-based authentication for multiple user accounts.
+- [ ] **Global Leaderboards**: Display trending movies based on real-time user ratings across the platform.
+
+---
+
+## 📚 Acknowledgements
+
+- **Dataset**: [MovieLens 100k](https://grouplens.org/datasets/movielens/100k/) provided by GroupLens Research.
+- **Inspiration**: The golden age of cinema and modern neural architecture designs.
 
 ---
 
