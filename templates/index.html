@@ -3139,6 +3139,12 @@
         document.getElementById('pr-result-wrap').style.display = 'none';
         document.getElementById('rc-result-wrap').style.display = 'none';
         document.getElementById('rc-user-ratings').style.display = 'none';
+        document.getElementById('xray-container').style.display = 'none';
+        document.getElementById('rc-profile-xray').style.display = 'none';
+        document.getElementById('engine-diagnostic').style.display = 'none';
+        document.getElementById('benchmark-panel').style.display = 'none';
+        window.chartDataBuffer = null;
+        [aC1, aC2, aC3, aC4, aC5, aC6, genreRadarChart, rcGenreRadarChart].forEach(c => { try { if (c) c.destroy(); } catch (e) { } });
         toast('Authentication successful', 'ok');
         goTo('home');
       } catch (e) {
