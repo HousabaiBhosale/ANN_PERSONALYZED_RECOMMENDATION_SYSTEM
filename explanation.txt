@@ -1,0 +1,54 @@
+# ANN Personalized Recommendation System - Detailed Explanation
+
+## Project Overview
+This project is an advanced Movie Recommendation System built using Artificial Neural Networks (ANN). It provides personalized movie suggestions by learning user preferences and movie characteristics through a process called Embedding.
+
+## Architecture & Technology Stack
+- Backend: Flask (Python)
+- Frontend: HTML5, CSS3, JavaScript (embedded in Flask templates)
+- Machine Learning: Pure NumPy for inference (originally trained with TensorFlow/Keras)
+- Data Processing: Pandas, NumPy
+- Deployment: Compatible with Heroku (Procfile included)
+
+## How It Works (Step-by-Step)
+
+### 1. Data Collection & Preprocessing
+The system uses the MovieLens dataset (ratings.csv and movies.csv).
+- 'ratings.csv': Contains user ratings for various movies.
+- 'movies.csv': Contains movie titles and genres.
+- Data is cleaned and encoded using LabelEncoders (saved as .pkl files) to convert IDs into sequential integers suitable for neural network input.
+
+### 2. The Neural Network Model (ANN)
+The core of the system is an Artificial Neural Network with the following structure:
+- Input Layers: One for User IDs and one for Movie IDs.
+- Embedding Layers: Maps sparse IDs into dense 50-dimensional vectors (User Embedding and Movie Embedding). These vectors capture the "essence" or "latent features" of users and movies.
+- Concatenation: Joins the user and movie vectors.
+- Dense Layers: Multiple fully connected layers (128 and 64 neurons) with ReLU activation to learn complex non-linear relationships.
+- Output Layer: A single neuron with Sigmoid activation that predicts the probability of a user liking a movie (mapped back to a 1-5 rating scale).
+
+### 3. Pure NumPy Inference Engine
+A unique feature of this project is its "Zero-Dependency" inference. Instead of requiring a heavy library like TensorFlow to run the model, the weights are extracted into a dictionary (weights.pkl). The application uses pure matrix multiplication (NumPy) to replicate the ANN's logic. This makes the app extremely fast and lightweight.
+
+### 4. Personalization & Recommendation Logic
+- Prediction: When a user enters their ID and a Movie ID, the model calculates the predicted rating.
+- Recommendation: To suggest new movies, the system picks a set of movies the user hasn't seen yet, runs them through the ANN, and returns the ones with the highest predicted ratings.
+- Explainability: The 'Explain' feature visualizes how the model made its decision by showing "Neuron Activations" and "Embedding Similarity". It shows which dimensions of the "Taste DNA" matched the movie's features.
+
+### 5. User Interface (Frontend)
+The frontend provides a modern, interactive dashboard where users can:
+- Login with a User ID.
+- Search for movies.
+- Get instant personalized recommendations.
+- See detailed technical explanations of WHY a movie was recommended.
+- Benchmark the neural network's performance.
+
+## File Structure
+- app.py: The main Flask server and NumPy inference logic.
+- weights.pkl: Contains the trained weights of the ANN.
+- *_encoder.pkl: Maps real IDs to model indices.
+- templates/index.html: The entire UI of the application.
+- dataset/: Contains the raw movie data.
+- requirements.txt: List of Python libraries needed.
+
+## Conclusion
+This project demonstrates how deep learning can be used for personalized experiences while maintaining high performance through optimized inference engines. It bridges the gap between complex ML research and practical, fast web applications.
